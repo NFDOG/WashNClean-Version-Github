@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Admin Login · WashNclean UP</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css" />
+<link rel="icon" type="image/x-icon" href="../icon.png">
+</head>
+<body class="login-body">
+
+  <!-- Container สำหรับ Toast แจ้งเตือนแบบใหม่ -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <div class="login-wrapper" id="login-card-main">
+    <a class="back-link" id="back-link" href="../index.html" aria-label="กลับหน้าแรก"></a>
+    
+    <!-- อนิเมชั่นเครื่องซักผ้าสไตล์เดียวกับ Index -->
+    <div class="hero-art login-hero-art" aria-hidden="true">
+      <svg viewBox="0 0 220 220" class="hero-svg">
+        <circle cx="110" cy="110" r="100" fill="url(#bg)"/>
+        <defs>
+          <radialGradient id="bg" cx="50%" cy="40%" r="70%">
+            <stop offset="0%" stop-color="#ffffff"/>
+            <stop offset="100%" stop-color="#dff3fa"/>
+          </radialGradient>
+        </defs>
+        
+        <!-- ฟองสบู่ -->
+        <circle cx="42" cy="55" r="7" fill="#ffd166" opacity=".9" class="bubble bubble-1"/>
+        <circle cx="176" cy="48" r="10" fill="#ff8fa3" opacity=".9" class="bubble bubble-2"/>
+        <circle cx="188" cy="150" r="6" fill="#8fd3f4" opacity=".9" class="bubble bubble-3"/>
+        <circle cx="34" cy="150" r="9" fill="#a0e3c2" opacity=".9" class="bubble bubble-4"/>
+        
+        <g class="washing-machine">
+          <rect x="55" y="42" width="110" height="132" rx="20" fill="#ffffff" stroke="#1c2b52" stroke-width="4"/>
+          <circle cx="72" cy="58" r="4" fill="#1c2b52"/>
+          <circle cx="86" cy="58" r="4" fill="#1c2b52"/>
+          <rect x="118" y="52" width="34" height="10" rx="5" fill="#eaf6fb" stroke="#1c2b52" stroke-width="2.4"/>
+          <circle cx="110" cy="118" r="42" fill="#eaf6fb" stroke="#1c2b52" stroke-width="4"/>
+          <g class="drum">
+            <circle cx="110" cy="118" r="28" fill="#ffffff" stroke="#2bb8d6" stroke-width="4"/>
+            <path d="M96 112c4 7 10 7 14 0s10-7 14 0" stroke="#2bb8d6" stroke-width="3.4" fill="none" stroke-linecap="round"/>
+            <path d="M96 128c4 7 10 7 14 0s10-7 14 0" stroke="#8fd8e8" stroke-width="3" fill="none" stroke-linecap="round"/>
+          </g>
+        </g>
+      </svg>
+    </div>
+
+    <!-- ส่วนของฟอร์ม -->
+    <main class="login-card">
+      <div class="login-header">
+        <h1 class="brand" style="font-size: 1.8rem; margin: 0 0 4px;">Admin<span style="color:var(--teal)">Portal</span></h1>
+      </div>
+
+      <form id="login-form">
+        <label class="field">
+          <span>ชื่อผู้ใช้ (Username)</span>
+          <input type="text" id="username" autocomplete="username" placeholder="กรอกชื่อผู้ใช้แอดมิน" required />
+        </label>
+        
+        <label class="field">
+          <span>รหัสผ่าน (Password)</span>
+          <!-- ครอบ input ด้วย div เพื่อจัดตำแหน่งตาให้ซ้อนอยู่ข้างใน -->
+          <div style="position: relative; width: 100%;">
+            <input type="password" id="password" autocomplete="current-password" placeholder="กรอกรหัสผ่าน" required style="width: 100%; padding-right: 42px; box-sizing: border-box;" />
+            <button type="button" id="toggle-password" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: transparent; border: none; padding: 0; color: var(--navy-soft); cursor: pointer; display: flex; transition: color 0.2s;" aria-label="แสดงรหัสผ่าน">
+              <svg id="eye-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                <circle cx="12" cy="12" r="3"></circle>
+              </svg>
+            </button>
+          </div>
+        </label>
+        
+        <button type="submit" class="primary-btn login-submit-btn" id="login-submit-btn">เข้าสู่ระบบ</button>
+      </form>
+
+      <div class="login-footer">
+        <p class="login-hint">บัญชีทดลอง: <strong>admin</strong> / <strong>admin</strong></p>
+      </div>
+    </main>
+
+  </div>
+
+<script src="../icons.js"></script>
+<script src="../firebase-config.js"></script>
+<script src="../shared-data.js"></script>
+<script src="../firebase-sync.js"></script>
+<script src="script_ad.js"></script>
+</body>
+</html>

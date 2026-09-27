@@ -1,0 +1,118 @@
+{
+  "rules": {
+    ".read": false,
+    ".write": false,
+    "machines": {
+      ".read": "auth != null",
+      ".write": "auth != null && auth.token.email == 'admin@washnclean.app'",
+      "$uid": {
+        ".validate": "newData.hasChildren(['uid', 'category', 'status']) && newData.child('uid').val() == $uid",
+        "category": {
+          ".validate": "newData.isString() && newData.val().matches(/^(washer|iron)$/)"
+        },
+        "id": {
+          ".validate": "(newData.isString() && newData.val().length > 0 && newData.val().length <= 10) || newData.isNumber()"
+        },
+        "price": {
+          ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 1000"
+        },
+        "duration": {
+          ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 600"
+        },
+        "status": {
+          ".write": "auth != null && data.parent().exists()",
+          ".validate": "newData.isString() && newData.val().matches(/^(available|busy|broken)$/)"
+        },
+        "startedAt": {
+          ".write": "auth != null && data.parent().exists()",
+          ".validate": "newData.isNumber()"
+        },
+        "needsRepair": {
+          ".write": "auth != null && data.parent().exists()",
+          ".validate": "newData.isBoolean()"
+        }
+      }
+    },
+    "usage": {
+      ".read": "auth != null",
+      ".write": "auth != null && auth.token.email == 'admin@washnclean.app'",
+      ".indexOn": [
+        "at"
+      ],
+      "$id": {
+        ".write": "auth != null && newData.exists() && (!data.exists() || data.child('status').val() == 'pending')",
+        ".validate": "newData.hasChildren(['id', 'uid', 'at', 'amount']) && newData.child('id').val() == $id && newData.child('amount').isNumber() && newData.child('amount').val() >= 0 && newData.child('amount').val() <= 1000 && newData.child('at').isNumber()",
+        "status": {
+          ".validate": "newData.isString() && newData.val().matches(/^(pending|done)$/)"
+        }
+      }
+    },
+    "reports": {
+      ".read": "auth != null && auth.token.email == 'admin@washnclean.app'",
+      ".write": "auth != null && auth.token.email == 'admin@washnclean.app'",
+      "$id": {
+        ".read": "auth != null && data.child('ownerUid').val() == auth.uid",
+        ".write": "auth != null && !data.exists() && newData.child('ownerUid').val() == auth.uid",
+        ".validate": "newData.hasChildren(['id', 'createdAt']) && newData.child('id').val() == $id",
+        "photos": {
+          "$i": {
+            ".validate": "newData.isString() && newData.val().beginsWith('data:image/') && newData.val().length < 1500000"
+          }
+        },
+        "photo": {
+          ".validate": "newData.isString() && (newData.val() == '' || (newData.val().beginsWith('data:image/') && newData.val().length < 1500000))"
+        },
+        "machineUid": {
+          ".validate": "newData.isString() && newData.val().length <= 60"
+        },
+        "machineLabel": {
+          ".validate": "newData.isString() && newData.val().length <= 100"
+        },
+        "topic": {
+          ".validate": "newData.isString() && newData.val().length <= 100"
+        },
+        "studentId": {
+          ".validate": "newData.isString() && newData.val().length <= 20"
+        },
+        "contact": {
+          ".validate": "newData.isString() && newData.val().length <= 100"
+        },
+        "extraDetail": {
+          ".validate": "newData.isString() && newData.val().length <= 1000"
+        },
+        "detail": {
+          ".validate": "newData.isString() && newData.val().length <= 2000"
+        },
+        "adminNote": {
+          ".validate": "newData.isString() && newData.val().length <= 1000"
+        },
+        "moneyLost": {
+          ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 1000"
+        },
+        "repairCost": {
+          ".validate": "newData.isNumber() && newData.val() >= 0"
+        }
+      }
+    },
+    "expenses": {
+      ".read": "auth != null && auth.token.email == 'admin@washnclean.app'",
+      ".write": "auth != null && auth.token.email == 'admin@washnclean.app'",
+      "$id": {
+        ".validate": "newData.hasChildren(['id', 'amount', 'date', 'category']) && newData.child('amount').isNumber()"
+      }
+    },
+    "admins": {
+      ".read": "auth != null",
+      ".write": "auth != null && auth.token.email == 'admin@washnclean.app'",
+      "$adminId": {
+        "password": {
+          ".validate": false
+        }
+      }
+    },
+    "meta": {
+      ".read": "auth != null && auth.token.email == 'admin@washnclean.app'",
+      ".write": "auth != null && auth.token.email == 'admin@washnclean.app'"
+    }
+  }
+}

@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hardware Demo Simulator</title>
+  
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../student/style.css" />
+  
+  <style>
+    body { background: #f0f4f8; }
+    .demo-container { max-width: 800px; margin: 0 auto; padding: 20px 20px 100px; }
+    .demo-header { text-align: center; margin-bottom: 30px; font-family: 'Baloo 2', 'IBM Plex Sans Thai', sans-serif; color: var(--navy); }
+    .demo-section-title { font-size: 1.2rem; border-bottom: 2px solid var(--line); padding-bottom: 8px; margin-top: 30px; }
+    .demo-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-top: 15px; }
+    
+    .demo-card {
+      background: #fff; border-radius: 20px; padding: 20px; text-align: center;
+      box-shadow: 0 8px 24px rgba(28, 43, 82, 0.08); transition: opacity 0.3s;
+    }
+
+    .btn-group { display: flex; flex-direction: column; gap: 8px; margin-top: 15px; }
+    .d-btn {
+      background: var(--teal); color: #fff; border: none; padding: 12px;
+      border-radius: 12px; font-family: inherit; font-weight: 600; font-size: 1rem;
+      cursor: pointer; transition: all 0.2s; box-shadow: 0 4px 12px rgba(43, 184, 214, 0.2);
+    }
+    .d-btn:hover:not(:disabled) { background: var(--teal-deep); transform: translateY(-2px); }
+    .d-btn:disabled { background: #f1f5f9; color: #94a3b8; cursor: not-allowed; transform: none; box-shadow: none; }
+    .d-btn.danger { background: var(--red); box-shadow: 0 4px 12px rgba(226, 83, 74, 0.2); }
+    .d-btn.danger:hover:not(:disabled) { background: #c53f36; }
+
+    /* =========================================
+       CSS ART (ดีไซน์เรียบง่าย ชัดเจน)
+       ========================================= */
+    .art-washer {
+      width: 120px; height: 140px; border: 4px solid var(--navy); border-radius: 14px;
+      margin: 0 auto 15px; position: relative; background: #fff; display: flex; flex-direction: column;
+    }
+    .aw-panel { height: 30px; border-bottom: 4px solid var(--navy); display: flex; align-items: center; justify-content: flex-end; padding: 0 10px; gap: 6px; }
+    .aw-led { width: 8px; height: 8px; border-radius: 50%; background: var(--red); }
+    .aw-screen { width: 24px; height: 12px; background: #e2e8f0; border-radius: 4px; }
+    
+    .aw-drum-container { flex: 1; position: relative; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+    .aw-drum { width: 76px; height: 76px; border: 4px solid var(--navy); border-radius: 50%; background: var(--sky-top); position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+    .aw-drum-inner { width: 50px; height: 50px; border-radius: 50%; border: 2px dotted rgba(28,43,82,0.2); }
+    .aw-water { position: absolute; bottom: -100px; left: -20px; width: 120px; height: 100px; background: var(--teal); opacity: 0.7; border-radius: 40%; transition: bottom 0.5s; }
+    
+    .art-iron { width: 120px; height: 90px; margin: 10px auto 15px; position: relative; }
+    .ai-body { width: 90px; height: 50px; background: #fff; border: 4px solid var(--navy); border-radius: 45px 15px 8px 8px; position: absolute; bottom: 5px; left: 15px; border-bottom-width: 6px; border-bottom-color: var(--teal); }
+    .ai-handle { width: 60px; height: 30px; border: 4px solid var(--navy); border-bottom: none; border-radius: 15px 15px 0 0; position: absolute; bottom: 55px; left: 30px; }
+    .ai-led { width: 8px; height: 8px; border-radius: 50%; background: #cbd5e1; position: absolute; bottom: 25px; right: 25px; }
+
+    /* Animations (จะลื่นไหลเมื่อไม่โดน DOM เขียนทับ) */
+    .is-running .aw-water { bottom: -15px; animation: water-spin 2s infinite linear; }
+    .is-running .aw-drum-inner { animation: drum-spin 1s infinite linear; }
+    .is-running .aw-led { background: var(--green); box-shadow: 0 0 8px var(--green); }
+    .is-running { animation: machine-shake 0.5s infinite; }
+
+    .is-plugged .ai-led { background: var(--red); box-shadow: 0 0 10px var(--red); }
+    .is-plugged { animation: iron-glide 2s infinite ease-in-out; }
+
+    @keyframes drum-spin { 100% { transform: rotate(360deg); } }
+    @keyframes water-spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    @keyframes machine-shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-1px) translateY(1px); } 75% { transform: translateX(1px) translateY(-1px); } }
+    @keyframes iron-glide { 0%, 100% { transform: translateX(-10px); } 50% { transform: translateX(10px); } }
+
+    /* =========================================
+       ส่วนเชื่อมรายรับ (เพิ่มใหม่ ใช้โทนเดิม)
+       ========================================= */
+    .demo-summary {
+      display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px;
+      background: #fff; border-radius: 20px; padding: 16px 18px;
+      box-shadow: 0 8px 24px rgba(28, 43, 82, 0.08);
+    }
+    .sum-item { min-width: 0; }
+    .sum-item span { display: block; font-size: 0.75rem; color: var(--navy-soft); }
+    .sum-item strong { font-family: 'Baloo 2', 'IBM Plex Sans Thai', sans-serif; font-size: 1.45rem; color: var(--teal-deep); line-height: 1.3; overflow-wrap: anywhere; }
+    .sum-last { grid-column: 1 / -1; margin: 0; padding-top: 10px; border-top: 1px solid var(--line); font-size: 0.8rem; color: var(--navy-soft); }
+    .demo-hint { margin: 10px 0 0; text-align: center; font-size: 0.8rem; color: var(--navy-soft); line-height: 1.5; }
+    .demo-card { position: relative; }
+    .price-tag {
+      display: inline-block; margin: 0 0 12px; padding: 3px 12px; border-radius: 999px;
+      background: var(--teal-soft); color: var(--teal-deep); font-size: 0.75rem; font-weight: 600;
+    }
+    .coin-meter { height: 8px; margin: 0 12px 6px; border-radius: 999px; background: var(--teal-soft); overflow: hidden; }
+    .coin-fill { height: 100%; width: 0; border-radius: 999px; background: var(--teal); transition: width 0.3s ease; }
+    .d-btn[hidden] { display: none; }
+    .d-btn.ghost { background: var(--teal-soft); color: var(--teal-deep); box-shadow: none; }
+    .d-btn.ghost:hover:not(:disabled) { background: #cdeef8; }
+    .empty-demo { grid-column: 1 / -1; text-align: center; color: var(--navy-soft); background: #fff; border-radius: 16px; padding: 24px; }
+    .coin-pop {
+      position: absolute; left: 50%; top: 38%; pointer-events: none;
+      font-family: 'Baloo 2', 'IBM Plex Sans Thai', sans-serif; font-weight: 800; font-size: 1.5rem; color: var(--green);
+      animation: coinPop 1s ease-out forwards;
+    }
+    @keyframes coinPop {
+      0% { opacity: 0; transform: translate(-50%, 10px) scale(0.8); }
+      20% { opacity: 1; transform: translate(-50%, 0) scale(1.1); }
+      100% { opacity: 0; transform: translate(-50%, -44px) scale(1); }
+    }
+    .demo-toast {
+      position: fixed; left: 50%; bottom: 22px; transform: translateX(-50%); z-index: 50;
+      max-width: calc(100% - 32px); padding: 12px 18px; border-radius: 14px;
+      background: var(--navy); color: #fff; font-size: 0.88rem; text-align: center;
+      box-shadow: 0 10px 26px rgba(28, 43, 82, 0.25); animation: slideUp 0.3s ease-out;
+    }
+    .demo-toast[hidden] { display: none; }
+    @media (max-width: 560px) {
+      .demo-summary { grid-template-columns: 1fr 1fr; }
+      .sum-item:nth-child(3) { grid-column: 1 / -1; }
+    }
+    /* ไอคอนเส้น SVG (แทน emoji) */
+    .wcu-i { width: 1.1em; height: 1.1em; vertical-align: -0.2em; margin-right: 6px; flex-shrink: 0; }
+    .demo-h1-icon .wcu-i { width: 0.95em; height: 0.95em; vertical-align: -0.1em; margin-right: 10px; color: var(--teal); }
+    .d-btn .wcu-i { width: 1em; height: 1em; vertical-align: -0.15em; }
+  </style>
+</head>
+<body>
+  <div class="demo-container">
+    <header class="demo-header">
+      <h1><span class="demo-h1-icon" data-ui-icon="sliders"></span>Hardware Simulator</h1>
+      <p style="color:var(--navy-soft); margin-top:-10px;">ระบบจำลองสถานะเครื่องสำหรับโชว์ Demo</p>
+    </header>
+
+    <section class="demo-summary" aria-live="polite">
+      <div class="sum-item"><span>เงินเข้าระบบวันนี้</span><strong id="sum-today">฿0</strong></div>
+      <div class="sum-item"><span>รวมจากหน้านี้ทั้งหมด</span><strong id="sum-all">฿0</strong></div>
+      <div class="sum-item"><span>รอบซักที่จ่ายครบวันนี้</span><strong id="sum-washes">0 รอบ</strong></div>
+      <p class="sum-last" id="sum-last">ยังไม่มีการหยอดเหรียญ</p>
+    </section>
+    <p class="demo-hint">กด "หยอดเหรียญ" 1 ครั้ง = เงิน 10 บาทเข้าหน้ารายรับของแอดมินทันที · หยอดครบราคาแล้วเครื่องจะเริ่มซัก</p>
+
+    <h2 class="demo-section-title">เครื่องซักผ้า</h2>
+    <div id="demo-washers" class="demo-grid"></div>
+
+    <h2 class="demo-section-title">เตารีด</h2>
+    <div id="demo-irons" class="demo-grid"></div>
+  </div>
+
+  <div class="demo-toast" id="demo-toast" role="status" hidden></div>
+
+  <script src="../icons.js"></script>
+  <script src="../firebase-config.js"></script>
+  <script src="../shared-data.js"></script>
+  <script src="../firebase-sync.js"></script>
+  
+  <script>
+    const pad2 = (n) => String(n).padStart(2, "0");
+    const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+    const baht = (n) => `฿${(Number(n) || 0).toLocaleString("th-TH")}`;
+    // ข้อความสถานะ + ไอคอน SVG (เขียนใหม่เฉพาะตอนเปลี่ยน กันไอคอนกระพริบทุกวินาที)
+    function setIconText(el, icon, text) {
+      const key = `${icon}|${text}`;
+      if (el.dataset.key === key) return;
+      el.dataset.key = key;
+      el.innerHTML = `${WcuIcon.ui(icon)}<span>${esc(text)}</span>`;
+    }
+    let layoutSignature = "";
+    let toastTimer = null;
+
+    // วาดโครงใหม่เมื่อมีการเพิ่ม/ลบ/เปลี่ยนเลขเครื่อง (เดิมเช็กแค่จำนวนเครื่อง ชื่อเลยไม่อัปเดต)
+    const machineSignature = (machines) => JSON.stringify(machines.map((m) => [m.uid, m.id, m.category])) + wcuLoadingText("");
+
+    // 1. สร้างโครงสร้างการ์ด
+    function renderLayout() {
+      const machines = wcuGetMachines();
+      layoutSignature = machineSignature(machines);
+      const washers = machines.filter((m) => m.category === "washer");
+      const irons = machines.filter((m) => m.category === "iron");
+
+      document.getElementById("demo-washers").innerHTML = washers.length ? washers.map((m) => `
+          <div class="demo-card" id="card-${esc(m.uid)}">
+            <h3 style="margin: 0 0 8px;">เครื่อง ${esc(m.id)}</h3>
+            <span class="price-tag" id="price-${esc(m.uid)}"></span>
+
+            <div id="art-${esc(m.uid)}" class="art-washer">
+              <div class="aw-panel"><div class="aw-screen"></div><div class="aw-led"></div></div>
+              <div class="aw-drum-container">
+                <div class="aw-drum"><div class="aw-water"></div><div class="aw-drum-inner"></div></div>
+              </div>
+            </div>
+
+            <p id="status-text-${esc(m.uid)}" style="font-weight: 600; margin: 10px 0 8px;"></p>
+            <div class="coin-meter"><div class="coin-fill" id="coin-fill-${esc(m.uid)}"></div></div>
+            <p id="coin-text-${esc(m.uid)}" style="font-size: 0.85rem; color: var(--navy-soft); margin: 0 0 15px;"></p>
+
+            <div class="btn-group">
+              <button type="button" id="btn-coin-${esc(m.uid)}" class="d-btn" data-action="coin" data-uid="${esc(m.uid)}">หยอดเหรียญ 10 บาท</button>
+              <button type="button" id="btn-finish-${esc(m.uid)}" class="d-btn ghost" data-action="finish" data-uid="${esc(m.uid)}" hidden>${WcuIcon.ui("fast-forward")}ข้ามเวลา (ซักเสร็จทันที)</button>
+            </div>
+          </div>
+        `).join("") : `<div class="empty-demo">${esc(wcuLoadingText("ยังไม่มีเครื่องซักผ้าในระบบ"))}</div>`;
+
+      document.getElementById("demo-irons").innerHTML = irons.length ? irons.map((m) => `
+          <div class="demo-card" id="card-${esc(m.uid)}">
+            <h3 style="margin: 0 0 8px;">เตารีด ${esc(m.id)}</h3>
+            <span class="price-tag">ใช้ฟรี · นับจำนวนครั้งที่ใช้</span>
+
+            <div id="art-${esc(m.uid)}" class="art-iron">
+              <div class="ai-handle"></div>
+              <div class="ai-body"><div class="ai-led"></div></div>
+            </div>
+
+            <p id="iron-text-${esc(m.uid)}" style="font-weight: 600; margin: 10px 0 15px;"></p>
+
+            <div class="btn-group">
+              <button type="button" id="btn-plug-${esc(m.uid)}" class="d-btn" data-action="plug" data-uid="${esc(m.uid)}">เสียบปลั๊ก</button>
+              <button type="button" id="btn-unplug-${esc(m.uid)}" class="d-btn danger" data-action="unplug" data-uid="${esc(m.uid)}" hidden>ถอดปลั๊กออก</button>
+            </div>
+          </div>
+        `).join("") : `<div class="empty-demo">${esc(wcuLoadingText("ยังไม่มีเตารีดในระบบ"))}</div>`;
+
+      syncUI();
+    }
+
+    // 2. ซิงค์ข้อมูลอย่างเดียว (ไม่ทำลายโครงสร้าง DOM อนิเมชันจะไม่สะดุด)
+    function syncUI() {
+      wcuAutoFinishWashes(); // ซักครบเวลาแล้วเครื่องกลับมาว่างเอง
+      const machines = wcuGetMachines();
+      if (machineSignature(machines) !== layoutSignature) { renderLayout(); return; }
+      const usage = wcuGetUsage();
+      const now = wcuNow();
+
+      machines.forEach((m) => {
+        const isBusy = m.status === "busy";
+        const isBroken = m.status === "broken";
+        const card = document.getElementById(`card-${m.uid}`);
+        const art = document.getElementById(`art-${m.uid}`);
+        if (!card || !art) return;
+        card.style.opacity = isBroken ? "0.6" : "1";
+
+        if (m.category === "washer") {
+          const price = wcuMachinePrice(m);
+          const pending = usage.find((u) => u.uid === m.uid && u.status === "pending");
+          const inserted = pending ? Number(pending.amount) || 0 : 0;
+          const minutes = Math.round(wcuMachineDurationMs(m) / 60000);
+
+          art.className = `art-washer ${isBusy ? "is-running" : ""}`;
+          document.getElementById(`price-${m.uid}`).textContent = price > 0 ? `ราคา ${baht(price)} / รอบ · ${minutes} นาที` : `ใช้ฟรี · ${minutes} นาที`;
+
+          const statusEl = document.getElementById(`status-text-${m.uid}`);
+          if (isBroken) setIconText(statusEl, "x-circle", "เครื่องเสีย (มีใบแจ้งซ่อม)");
+          else if (isBusy) {
+            const left = m.startedAt ? Math.max(0, Number(m.startedAt) + wcuMachineDurationMs(m) - now) : 0;
+            setIconText(statusEl, "spin", `กำลังทำงาน · เหลือ ${pad2(Math.floor(left / 60000))}:${pad2(Math.floor((left % 60000) / 1000))}`);
+          } else if (inserted > 0) setIconText(statusEl, "coin", "กำลังหยอดเหรียญ");
+          else setIconText(statusEl, "check-circle", "ว่าง / รอหยอดเหรียญ");
+          statusEl.style.color = isBroken ? "var(--red)" : (isBusy ? "var(--teal)" : "var(--navy)");
+
+          document.getElementById(`coin-fill-${m.uid}`).style.width = `${isBusy ? 100 : price > 0 ? Math.min(100, (inserted / price) * 100) : 0}%`;
+          document.getElementById(`coin-text-${m.uid}`).textContent = isBusy
+            ? "จ่ายครบแล้ว · เงินเข้าหน้ารายรับเรียบร้อย"
+            : `ยอดเงินในเครื่อง: ${inserted} / ${price} บาท`;
+
+          const coinBtn = document.getElementById(`btn-coin-${m.uid}`);
+          coinBtn.disabled = isBusy || isBroken;
+          coinBtn.textContent = price > 0 ? "หยอดเหรียญ 10 บาท" : "เริ่มซัก (ฟรี)";
+          document.getElementById(`btn-finish-${m.uid}`).hidden = !isBusy;
+        } else if (m.category === "iron") {
+          art.className = `art-iron ${isBusy ? "is-plugged" : ""}`;
+          const ironText = document.getElementById(`iron-text-${m.uid}`);
+          if (isBroken) setIconText(ironText, "x-circle", "เครื่องเสีย (มีใบแจ้งซ่อม)");
+          else if (isBusy) setIconText(ironText, "zap", "เสียบปลั๊กอยู่");
+          else setIconText(ironText, "plug", "ถอดปลั๊กอยู่");
+          ironText.style.color = isBroken ? "var(--red)" : (isBusy ? "var(--red)" : "var(--navy)");
+
+          const btnPlug = document.getElementById(`btn-plug-${m.uid}`);
+          const btnUnplug = document.getElementById(`btn-unplug-${m.uid}`);
+          btnPlug.hidden = isBusy;
+          btnPlug.disabled = isBroken;
+          btnUnplug.hidden = !isBusy;
+          btnUnplug.disabled = isBroken;
+        }
+      });
+
+      renderSummary(usage, machines);
+    }
+
+    // สรุปเงินที่เข้าระบบจากหน้านี้ (ไม่นับข้อมูลตัวอย่าง)
+    function renderSummary(usage, machines) {
+      const t0 = new Date(); t0.setHours(0, 0, 0, 0);
+      const real = usage.filter((u) => !wcuIsSampleRecord(u));
+      const today = real.filter((u) => Number(u.lastCoinAt || u.at) >= t0.getTime());
+      const sum = (list) => list.reduce((a, u) => a + Math.max(0, Number(u.amount) || 0), 0);
+      document.getElementById("sum-today").textContent = baht(sum(today));
+      document.getElementById("sum-all").textContent = baht(sum(real));
+      document.getElementById("sum-washes").textContent = `${today.filter((u) => u.category === "washer" && wcuIsCompletedUse(u)).length} รอบ`;
+
+      const last = real.slice().sort((a, b) => Number(b.lastCoinAt || b.at) - Number(a.lastCoinAt || a.at))[0];
+      if (last) {
+        const m = machines.find((x) => x.uid === last.uid);
+        const name = `${last.category === "iron" ? "เตารีด" : "เครื่องซักผ้า"} ${m ? m.id : last.machineId}`;
+        const d = new Date(Number(last.lastCoinAt || last.at));
+        const what = last.category === "iron" ? "เสียบปลั๊กใช้งาน (ฟรี)"
+          : last.status === "pending" ? `หยอดแล้ว ${baht(last.amount)} จาก ${baht(last.price)}` : `จ่ายครบ ${baht(last.amount)}`;
+        document.getElementById("sum-last").textContent = `ล่าสุด: ${name} · ${what} · ${pad2(d.getHours())}:${pad2(d.getMinutes())} น.`;
+      } else {
+        document.getElementById("sum-last").textContent = "ยังไม่มีการหยอดเหรียญ";
+      }
+    }
+
+    function showDemoToast(text) {
+      const el = document.getElementById("demo-toast");
+      el.textContent = text;
+      el.hidden = false;
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => { el.hidden = true; }, 2600);
+    }
+
+    function popCoin(uid, amount) {
+      const card = document.getElementById(`card-${uid}`);
+      if (!card || !amount) return;
+      const pop = document.createElement("span");
+      pop.className = "coin-pop";
+      pop.textContent = `+${baht(amount)}`;
+      card.appendChild(pop);
+      setTimeout(() => pop.remove(), 1000);
+    }
+
+    // 3. ควบคุม Action ต่างๆ
+    // บันทึกไม่ได้ (เช่นพื้นที่เก็บข้อมูลในเครื่องเต็ม) ต้องบอกผู้ใช้ ไม่ใช่เงียบหาย
+    function safely(action) {
+      try { action(); }
+      catch (err) {
+        console.error(err);
+        showDemoToast(/quota/i.test(String(err && (err.name || err.message))) ? "บันทึกไม่ได้: พื้นที่เก็บข้อมูลในเบราว์เซอร์เต็ม" : "เกิดข้อผิดพลาด ลองใหม่อีกครั้ง");
+      }
+      syncUI();
+    }
+
+    function insertCoin(uid) {
+      const result = wcuInsertCoin(uid);
+      if (!result.ok) { showDemoToast(result.reason); syncUI(); return; }
+      const m = wcuGetMachines().find((x) => x.uid === uid);
+      popCoin(uid, result.coin);
+      if (result.started) showDemoToast(`เครื่อง ${m ? m.id : ""} เริ่มซักแล้ว · รอบนี้จ่าย ${baht(result.paid)} บันทึกเข้าหน้ารายรับแล้ว`);
+      else showDemoToast(`+${baht(result.coin)} เข้าหน้ารายรับแล้ว · ในเครื่อง ${result.paid}/${result.price} บาท`);
+      syncUI();
+    }
+
+    function finishWash(uid) {
+      if (wcuFinishWash(uid)) {
+        const m = wcuGetMachines().find((x) => x.uid === uid);
+        showDemoToast(m && m.status === "broken"
+          ? "ซักเสร็จแล้ว · เครื่องนี้มีใบแจ้งซ่อมค้าง จึงปิดใช้งานรอซ่อม"
+          : "ซักเสร็จแล้ว เครื่องว่างพร้อมให้คนต่อไปใช้");
+      }
+      syncUI();
+    }
+
+    function togglePlug(uid, newStatus) {
+      const machine = wcuGetMachines().find(m => m.uid === uid);
+      if (!machine || machine.status === "broken") { syncUI(); return; }
+
+      const startsUsing = newStatus === "busy" && machine.status !== "busy";
+      wcuSetMachineStatus(uid, newStatus);
+      if (startsUsing) {
+        wcuRecordUsage(uid); // เตารีดฟรี แต่ยังนับจำนวนครั้งที่ใช้งาน
+        showDemoToast(`เตารีด ${machine.id} เริ่มใช้งาน · บันทึกจำนวนครั้งในหน้ารายรับแล้ว`);
+      } else if (newStatus === "available" && machine.needsRepair) {
+        showDemoToast(`ถอดปลั๊กแล้ว · เตารีด ${machine.id} มีใบแจ้งซ่อมค้าง จึงปิดใช้งานรอซ่อม`);
+      }
+      syncUI();
+    }
+
+    document.querySelector(".demo-container").addEventListener("click", (e) => {
+      const btn = e.target.closest("[data-action]");
+      if (!btn || btn.disabled) return;
+      const uid = btn.dataset.uid;
+      if (btn.dataset.action === "coin") safely(() => insertCoin(uid));
+      else if (btn.dataset.action === "finish") safely(() => finishWash(uid));
+      else if (btn.dataset.action === "plug") safely(() => togglePlug(uid, "busy"));
+      else if (btn.dataset.action === "unplug") safely(() => togglePlug(uid, "available"));
+    });
+
+    // --- Boot ---
+    document.querySelectorAll("[data-ui-icon]").forEach((el) => { el.innerHTML = WcuIcon.ui(el.dataset.uiIcon); });
+    renderLayout();
+    setInterval(syncUI, 1000);
+  </script>
+</body>
+</html>

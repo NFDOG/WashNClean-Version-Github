@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Admin Dashboard · WashNclean UP</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css" />
+<link rel="icon" type="image/x-icon" href="../icon.png">
+
+</head>
+<body>
+
+  <!-- Container สำหรับ Toast แจ้งเตือน -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <div class="app">
+
+    <!-- Header หลัก -->
+    <header class="main-header">
+      <div>
+        <h1 id="header-title">แดชบอร์ด</h1>
+        <p id="header-subtitle">ผู้ดูแลระบบ</p>
+        <span class="cloud-chip" id="cloud-chip" hidden></span>
+      </div>
+      <button class="logout-btn" id="logout-btn" aria-label="ออกจากระบบ">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+      </button>
+    </header>
+
+    <!-- VIEW 1: จัดการเครื่อง (หน้าหลัก) -->
+    <section class="view" id="view-machines">
+      <div class="segment-control">
+        <button class="segment-btn active" data-cat="washer">เครื่องซักผ้า</button>
+        <button class="segment-btn" data-cat="iron">เตารีด</button>
+        <button class="segment-btn" data-cat="broken"><span data-ui-icon="alert"></span> มีปัญหา</button>
+      </div>
+
+      <div class="grid" id="machine-grid"></div>
+
+      <button class="fab" id="add-machine-btn" aria-label="เพิ่มเครื่อง">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+      </button>
+    </section>
+
+    <!-- VIEW 2: รายรับ (คำนวณจากประวัติการใช้งานจริงใน wcu:usage) -->
+    <section class="view" id="view-revenue" hidden>
+      <div class="segment-control period-control" role="group" aria-label="ช่วงเวลา">
+        <button type="button" class="segment-btn" data-period="today">วันนี้</button>
+        <button type="button" class="segment-btn" data-period="7d">7 วัน</button>
+        <button type="button" class="segment-btn active" data-period="30d">30 วัน</button>
+        <button type="button" class="segment-btn" data-period="all">ทั้งหมด</button>
+      </div>
+      <p class="period-caption" id="rev-period-caption"></p>
+
+      <div class="source-banner">
+        <span class="source-icon" aria-hidden="true" data-ui-icon="coin"></span>
+        <div class="source-text">
+          <strong>รายรับมาจากการหยอดเหรียญในหน้า demo</strong>
+          <span>กดหยอดเหรียญ 1 ครั้ง เงินเข้าหน้านี้ทันที (อัปเดตเองทุกวินาที)</span>
+          <span class="source-note" id="rev-sample-note"></span>
+        </div>
+        <div class="source-actions">
+          <a class="text-btn" href="../demo/index.html" target="_blank" rel="noopener">เปิดหน้า demo ↗</a>
+          <button type="button" class="text-btn danger" id="rev-remove-sample" hidden>ลบข้อมูลตัวอย่าง</button>
+        </div>
+      </div>
+
+      <div class="revenue-hero">
+        <span class="rev-label" id="rev-hero-label">รายรับรวม</span>
+        <h2 id="rev-grand-total">฿0</h2>
+        <div class="hero-meta"><span class="hero-delta" id="rev-delta" hidden></span></div>
+      </div>
+
+      <div class="kpi-grid">
+        <div class="kpi-card">
+          <span class="kpi-label">จำนวนการใช้งาน</span>
+          <strong id="rev-kpi-uses">0 ครั้ง</strong>
+          <span class="kpi-sub" id="rev-kpi-uses-sub"></span>
+        </div>
+        <div class="kpi-card">
+          <span class="kpi-label">รายรับเฉลี่ยต่อรอบซัก</span>
+          <strong id="rev-kpi-avg">-</strong>
+          <span class="kpi-sub" id="rev-kpi-avg-sub"></span>
+        </div>
+        <div class="kpi-card">
+          <span class="kpi-label">รายรับเฉลี่ยต่อวัน</span>
+          <strong id="rev-kpi-daily">฿0</strong>
+          <span class="kpi-sub" id="rev-kpi-daily-sub"></span>
+        </div>
+        <div class="kpi-card">
+          <span class="kpi-label">เครื่องทำรายได้สูงสุด</span>
+          <strong id="rev-kpi-top">-</strong>
+          <span class="kpi-sub" id="rev-kpi-top-sub"></span>
+        </div>
+      </div>
+
+      <div class="rev-split-container">
+        <div class="rev-split-box washer">
+          <span>เครื่องซักผ้า</span>
+          <strong id="rev-washer-val">฿0</strong>
+          <span class="rev-count" id="rev-washer-count">0 เครื่อง</span>
+        </div>
+        <div class="rev-split-box iron">
+          <span>เตารีด</span>
+          <strong id="rev-iron-val">฿0</strong>
+          <span class="rev-count" id="rev-iron-count">0 เครื่อง</span>
+        </div>
+      </div>
+
+      <div class="fin-grid">
+        <div class="chart-card">
+          <div class="chart-head">
+            <h3 id="rev-chart-title">รายรับรายวัน</h3>
+            <button type="button" class="table-toggle" data-table="rev-trend-table" aria-expanded="false">ดูตาราง</button>
+          </div>
+          <p class="chart-sub" id="rev-chart-sub"></p>
+          <div class="chart" id="rev-trend-chart"></div>
+          <div class="chart-table" id="rev-trend-table" hidden></div>
+        </div>
+
+        <div class="chart-card">
+          <div class="chart-head">
+            <h3>ช่วงเวลาที่มีคนใช้งาน</h3>
+            <button type="button" class="table-toggle" data-table="rev-hours-table" aria-expanded="false">ดูตาราง</button>
+          </div>
+          <p class="chart-sub" id="rev-hours-sub"></p>
+          <div class="chart" id="rev-hours-chart"></div>
+          <p class="chart-foot" id="rev-hours-parts"></p>
+          <div class="chart-table" id="rev-hours-table" hidden></div>
+        </div>
+      </div>
+
+      <div class="revenue-list-container">
+        <div class="list-head">
+          <h3>รายได้แยกตามเครื่อง</h3>
+          <div class="sort-chips" role="group" aria-label="เรียงลำดับ">
+            <button type="button" class="chip-btn active" data-rev-sort="id">หมายเลข</button>
+            <button type="button" class="chip-btn" data-rev-sort="revenue">รายรับสูงสุด</button>
+          </div>
+        </div>
+        <div class="revenue-list" id="revenue-detail-list"></div>
+      </div>
+
+      <div class="revenue-list-container">
+        <div class="list-head">
+          <div>
+            <h3>ประวัติการใช้งาน</h3>
+            <span class="list-sub" id="rev-txn-count"></span>
+          </div>
+          <button type="button" class="text-btn csv-btn" id="rev-export-btn" title="ดาวน์โหลดไฟล์ CSV (เปิดด้วย Excel / Google Sheets ได้)"><svg class="csv-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>ดาวน์โหลด CSV</button>
+        </div>
+        <div class="txn-list" id="rev-txn-list"></div>
+        <button type="button" class="more-btn" id="rev-txn-more" hidden>ดูเพิ่ม</button>
+      </div>
+    </section>
+
+    <!-- VIEW 3: รายจ่าย (wcu:expenses) -->
+    <section class="view" id="view-expenses" hidden>
+      <div class="segment-control period-control" role="group" aria-label="ช่วงเวลา">
+        <button type="button" class="segment-btn" data-period="today">วันนี้</button>
+        <button type="button" class="segment-btn" data-period="7d">7 วัน</button>
+        <button type="button" class="segment-btn active" data-period="30d">30 วัน</button>
+        <button type="button" class="segment-btn" data-period="all">ทั้งหมด</button>
+      </div>
+      <p class="period-caption" id="exp-period-caption"></p>
+
+      <div class="revenue-hero expense-hero">
+        <span class="rev-label" id="exp-hero-label">รายจ่ายรวม</span>
+        <h2 id="exp-grand-total">฿0</h2>
+        <div class="hero-meta"><span class="hero-delta" id="exp-delta" hidden></span></div>
+      </div>
+
+      <div class="profit-card">
+        <div class="profit-head">
+          <span>กำไรสุทธิ (รายรับ − รายจ่าย)</span>
+          <strong id="exp-profit">฿0</strong>
+        </div>
+        <div class="compare-row">
+          <span class="compare-label">รายรับ</span>
+          <div class="compare-track"><div class="compare-fill income" id="exp-bar-income"></div></div>
+          <span class="compare-val" id="exp-income-val">฿0</span>
+        </div>
+        <div class="compare-row expense">
+          <span class="compare-label">รายจ่าย</span>
+          <div class="compare-track"><div class="compare-fill expense" id="exp-bar-expense"></div></div>
+          <span class="compare-val" id="exp-expense-val">฿0</span>
+        </div>
+        <p class="profit-note" id="exp-margin"></p>
+      </div>
+
+      <div class="kpi-grid">
+        <div class="kpi-card">
+          <span class="kpi-label">จำนวนรายการ</span>
+          <strong id="exp-kpi-count">0 รายการ</strong>
+          <span class="kpi-sub" id="exp-kpi-count-sub"></span>
+        </div>
+        <div class="kpi-card">
+          <span class="kpi-label">ต้นทุนต่อรอบซัก</span>
+          <strong id="exp-kpi-perwash">-</strong>
+          <span class="kpi-sub" id="exp-kpi-perwash-sub"></span>
+        </div>
+        <div class="kpi-card">
+          <span class="kpi-label">รายจ่ายเฉลี่ยต่อวัน</span>
+          <strong id="exp-kpi-daily">฿0</strong>
+          <span class="kpi-sub" id="exp-kpi-daily-sub"></span>
+        </div>
+        <div class="kpi-card">
+          <span class="kpi-label">หมวดที่จ่ายมากที่สุด</span>
+          <strong id="exp-kpi-top">-</strong>
+          <span class="kpi-sub" id="exp-kpi-top-sub"></span>
+        </div>
+      </div>
+
+      <div class="fin-grid">
+        <div class="chart-card">
+          <div class="chart-head"><h3>สัดส่วนตามหมวดหมู่</h3></div>
+          <div class="stack-bar" id="exp-stack" role="img"></div>
+          <div class="cat-list" id="exp-cat-list"></div>
+        </div>
+
+        <div class="chart-card">
+          <div class="chart-head"><h3>สรุปรายเดือน</h3></div>
+          <div id="exp-month-table"></div>
+          <p class="chart-foot" id="exp-month-note"></p>
+        </div>
+      </div>
+
+      <div class="revenue-list-container" id="exp-machine-card" hidden>
+        <div class="list-head"><h3>ค่าใช้จ่ายแยกตามเครื่อง</h3></div>
+        <div class="revenue-list" id="exp-machine-list"></div>
+      </div>
+
+      <div class="revenue-list-container">
+        <div class="list-head">
+          <div>
+            <h3>รายการรายจ่าย</h3>
+            <span class="list-sub" id="exp-list-count"></span>
+          </div>
+          <button type="button" class="text-btn csv-btn" id="exp-export-btn" title="ดาวน์โหลดไฟล์ CSV (เปิดด้วย Excel / Google Sheets ได้)"><svg class="csv-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>ดาวน์โหลด CSV</button>
+        </div>
+        <div class="filter-chips" id="exp-filter-chips" role="group" aria-label="กรองตามหมวด"></div>
+        <div class="txn-list" id="exp-list"></div>
+      </div>
+
+      <button class="fab" id="add-expense-btn" aria-label="เพิ่มรายจ่าย">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+      </button>
+    </section>
+
+    <!-- VIEW 4: รายการแจ้งซ่อม -->
+    <section class="view" id="view-reports" hidden>
+      <div class="kpi-grid rep-kpis">
+        <div class="kpi-card"><span class="kpi-label">ใบแจ้งทั้งหมด</span><strong id="rk-total">0</strong><span class="kpi-sub" id="rk-total-sub"></span></div>
+        <div class="kpi-card"><span class="kpi-label">เริ่มดำเนินการเฉลี่ย</span><strong id="rk-response">-</strong><span class="kpi-sub">นับจากตอนนิสิตแจ้ง</span></div>
+        <div class="kpi-card"><span class="kpi-label">ซ่อมเสร็จเฉลี่ย</span><strong id="rk-fix">-</strong><span class="kpi-sub" id="rk-fix-sub"></span></div>
+        <div class="kpi-card"><span class="kpi-label">ค่าซ่อมรวม</span><strong id="rk-cost">฿0</strong><span class="kpi-sub" id="rk-cost-sub"></span></div>
+      </div>
+
+      <button type="button" class="refund-alert" id="refund-alert" hidden></button>
+
+      <div class="rep-stats">
+        <button type="button" class="rep-stats-toggle" id="rep-stats-toggle" aria-expanded="false" aria-controls="rep-stats-body">
+          <span><span data-ui-icon="chart"></span> สถิติการแจ้งซ่อม</span><span class="chev" aria-hidden="true">▾</span>
+        </button>
+        <div class="rep-stats-body" id="rep-stats-body" hidden>
+          <div class="fin-grid">
+            <div class="chart-card">
+              <div class="chart-head"><h3>อาการที่พบบ่อย</h3></div>
+              <p class="chart-sub">นับจากใบแจ้งทั้งหมด (1 ใบเลือกได้หลายอาการ)</p>
+              <div class="hbar-list" id="rep-issue-bars"></div>
+            </div>
+            <div class="chart-card">
+              <div class="chart-head"><h3>เครื่องที่แจ้งซ่อมบ่อย</h3></div>
+              <p class="chart-sub">รวมทุกสถานะ · ตัวเลขในวงเล็บคือใบที่ยังไม่ปิด</p>
+              <div class="hbar-list" id="rep-machine-bars"></div>
+              <h4 class="sev-title">ระดับความรุนแรง</h4>
+              <div class="sev-stack" id="rep-sev-stack" role="img"></div>
+              <div class="sev-legend" id="rep-sev-legend"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="report-summary" role="group" aria-label="สถานะใบแจ้งซ่อม">
+        <button type="button" class="rs-card st-new active" data-rtab="new" aria-pressed="true">
+          <span class="rs-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><line x1="12" y1="7.5" x2="12" y2="12.5"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg></span>
+          <strong id="rs-count-new">0</strong>
+          <span class="rs-label">รอตรวจสอบ</span>
+        </button>
+        <button type="button" class="rs-card st-progress" data-rtab="in_progress" aria-pressed="false">
+          <span class="rs-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a4 4 0 0 0-5.4 4.9L4 16.5V20h3.5l5.3-5.3a4 4 0 0 0 4.9-5.4l-2.6 2.6-2-2z"></path></svg></span>
+          <strong id="rs-count-in_progress">0</strong>
+          <span class="rs-label">กำลังซ่อม</span>
+        </button>
+        <button type="button" class="rs-card st-done" data-rtab="resolved" aria-pressed="false">
+          <span class="rs-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="5 12.5 10 17 19 7.5"></polyline></svg></span>
+          <strong id="rs-count-resolved">0</strong>
+          <span class="rs-label">ซ่อมเสร็จ</span>
+        </button>
+      </div>
+      <p class="report-insight" id="report-insight"></p>
+
+      <div class="rep-toolbar">
+        <label class="rep-search">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+          <input type="search" id="rep-search" placeholder="ค้นหา…" title="ค้นหาได้จากเลขเครื่อง รหัสนิสิต อาการ หมายเลขใบแจ้ง เบอร์ติดต่อ และบันทึกแอดมิน" aria-label="ค้นหาใบแจ้งซ่อม" autocomplete="off" />
+        </label>
+        <select id="rep-sort" aria-label="เรียงลำดับ">
+          <option value="newest">ใหม่สุดก่อน</option>
+          <option value="oldest">รอนานสุดก่อน</option>
+          <option value="severity">รุนแรงสุดก่อน</option>
+        </select>
+        <button type="button" class="text-btn csv-btn" id="rep-export" title="ดาวน์โหลดใบแจ้งซ่อมทั้งหมดเป็นไฟล์ CSV (เปิดด้วย Excel / Google Sheets ได้)" aria-label="ดาวน์โหลดใบแจ้งซ่อมเป็นไฟล์ CSV"><svg class="csv-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>CSV</button>
+      </div>
+      <div class="filter-chips" id="report-filters" role="group" aria-label="กรองใบแจ้งซ่อม"></div>
+      <div class="report-list" id="report-list"></div>
+    </section>
+
+    <!-- BOTTOM TAB BAR -->
+    <nav class="main-bottom-nav">
+      <button class="tab-item active" data-target="machines">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+        <span>หน้าหลัก</span>
+      </button>
+      <button class="tab-item" data-target="revenue">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+        <span>รายรับ</span>
+      </button>
+      <button class="tab-item" data-target="expenses">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3h14v18l-2.5-1.6L14 21l-2-1.6L10 21l-2.5-1.6L5 21z"></path><line x1="9" y1="8" x2="15" y2="8"></line><line x1="9" y1="12" x2="15" y2="12"></line><line x1="9" y1="16" x2="12" y2="16"></line></svg>
+        <span>รายจ่าย</span>
+      </button>
+      <button class="tab-item" data-target="reports">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
+        <span>แจ้งซ่อม</span>
+      </button>
+    </nav>
+
+    <!-- MODALS -->
+    
+    <!-- 1. Modal ตั้งค่าเครื่อง -->
+    <div id="admin-modal" class="modal-backdrop" hidden>
+      <div class="modal-card">
+        <button class="modal-close" id="modal-close" aria-label="ปิด">&times;</button>
+        <div class="modal-icon" id="modal-icon"></div>
+        <h2 id="modal-title">ตั้งค่าเครื่อง</h2>
+        <div class="modal-status-badge" id="modal-status">ว่าง</div>
+        
+        <form id="admin-edit-form" class="modal-form">
+          <div class="form-grid-2">
+            <label class="field">
+              <span>หมายเลขเครื่อง</span>
+              <input type="text" id="edit-machine-id" required maxlength="10" autocomplete="off" />
+            </label>
+            <label class="field">
+              <span>เวลาทำงาน (นาที)</span>
+              <input type="number" id="edit-machine-duration" min="1" required />
+            </label>
+          </div>
+
+          <!-- ใช้ modal-details จากฝั่งนักศึกษา เพื่อให้เรียบร้อยไม่เพี้ยน -->
+          <div class="modal-details" style="margin-bottom: 12px; margin-top: 5px;">
+            <div class="detail-row">
+              <span>สถานะเวลา:</span>
+              <strong id="modal-time">--:--</strong>
+            </div>
+            <div class="detail-row">
+              <span>รายรับสะสม:</span>
+              <strong id="modal-revenue" style="color: var(--teal-deep);">฿0</strong>
+            </div>
+            <div class="detail-row">
+              <span>ค่าใช้จ่ายสะสม:</span>
+              <strong id="modal-expense">฿0</strong>
+            </div>
+          </div>
+
+          <div id="modal-reporter-section" class="reporter-box clickable" hidden>
+            <div class="reporter-content">
+              <h4>
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+                ข้อมูลจากผู้แจ้งปัญหา
+              </h4>
+              <p id="modal-reporter-text">ไม่พบข้อมูล</p>
+            </div>
+            <div class="reporter-arrow">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+            </div>
+          </div>
+
+          <label class="field">
+            <span>ราคาค่าบริการ (บาท)</span>
+            <div class="stepper-group">
+              <button type="button" class="stepper-btn" id="modal-dec-price">- 10</button>
+              <input type="number" id="edit-machine-price" min="0" required />
+              <button type="button" class="stepper-btn" id="modal-inc-price">+ 10</button>
+            </div>
+          </label>
+
+          <button type="submit" class="modal-action-btn" style="background: var(--teal); color: #fff;">บันทึกการแก้ไข</button>
+        </form>
+        
+        <div class="modal-admin-actions">
+          <button type="button" class="ghost-btn toggle-btn" id="modal-toggle-status-btn">พักเครื่อง</button>
+          <button type="button" class="ghost-btn delete-btn" id="modal-delete-btn">ลบเครื่องทิ้ง</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. Modal เพิ่มเครื่อง -->
+    <div id="add-modal" class="modal-backdrop" hidden>
+      <div class="modal-card">
+        <h2>เพิ่มเครื่องใหม่</h2>
+        <form id="add-machine-form" class="modal-form">
+          <label class="field">
+            <span>ประเภทเครื่อง</span>
+            <select id="new-category">
+              <option value="washer">เครื่องซักผ้า</option>
+              <option value="iron">เตารีด</option>
+            </select>
+          </label>
+          <div class="form-grid-2">
+            <label class="field">
+              <span>หมายเลขเครื่อง</span>
+              <input type="text" id="new-id" required maxlength="10" autocomplete="off" />
+            </label>
+            <label class="field">
+              <span>เวลาทำงาน (นาที)</span>
+              <input type="number" id="new-duration" min="1" value="60" required />
+            </label>
+          </div>
+          <label class="field">
+            <span>ราคา (บาท/ครั้ง)</span>
+            <input type="number" id="new-price" min="0" value="20" required />
+          </label>
+          <div class="form-actions">
+            <button type="button" class="ghost-btn" id="add-cancel-btn">ยกเลิก</button>
+            <button type="submit" class="modal-action-btn" style="background: var(--teal); color: #fff;">เพิ่มเครื่อง</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- 3. Modal ยืนยันการลบ -->
+    <div id="delete-modal" class="modal-backdrop" hidden>
+      <div class="modal-card alert-card">
+        <div class="alert-icon danger">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </div>
+        <h3>ยืนยันการลบ?</h3>
+        <p id="delete-desc">เครื่องจะถูกลบออกจากระบบอย่างถาวร</p>
+        <div class="form-actions">
+          <button type="button" class="ghost-btn" id="delete-cancel-btn">ยกเลิก</button>
+          <button type="button" class="modal-action-btn" id="delete-confirm-btn" style="background: var(--red); color: #fff; border-color: var(--red);">ลบเครื่อง</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. Modal ยืนยันการบันทึก -->
+    <div id="save-modal" class="modal-backdrop" hidden>
+      <div class="modal-card alert-card">
+        <div class="alert-icon primary">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+        </div>
+        <h3>ยืนยันการบันทึก?</h3>
+        <p>คุณต้องการบันทึกการแก้ไขข้อมูลของเครื่องนี้ใช่หรือไม่</p>
+        <div class="form-actions">
+          <button type="button" class="ghost-btn" id="save-cancel-btn">ยกเลิก</button>
+          <button type="button" class="modal-action-btn" id="save-confirm-btn" style="background: var(--teal); color: #fff;">บันทึกข้อมูล</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. Alert Success Modal (ดีไซน์เดียวกับหน้า Index เป๊ะๆ) -->
+    <div id="success-modal" class="modal-backdrop" hidden>
+      <div class="modal-card success-alert-card">
+        <div class="success-circle">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M7 13l3 3 7-7" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <h3 style="margin: 10px 0 5px; font-family: 'Baloo 2', 'IBM Plex Sans Thai', sans-serif; font-size: 1.5rem;">บันทึกสำเร็จ!</h3>
+        <p style="color: var(--navy-soft); font-size: 0.9rem; margin-bottom: 20px;">ข้อมูลของเครื่องถูกอัปเดตเรียบร้อยแล้ว</p>
+        <button class="modal-action-btn" id="success-close-btn" style="background: var(--teal); color: #fff;">ตกลง</button>
+      </div>
+    </div>
+
+    <!-- Modal รายละเอียดใบแจ้งซ่อม -->
+    <div id="report-modal" class="modal-backdrop" hidden>
+      <div class="modal-card report-detail-card">
+        <button class="modal-close" aria-label="ปิด">&times;</button>
+        <button type="button" class="rd-photo" id="rd-photo" aria-label="ดูรูปหลักฐานขนาดใหญ่"></button>
+        <div class="rd-thumbs" id="rd-thumbs" hidden></div>
+
+        <div class="rd-content">
+          <div class="rd-head">
+            <div class="rd-title-wrap">
+              <h2 id="rd-title">เครื่อง</h2>
+              <span class="rd-code" id="rd-code"></span>
+            </div>
+            <div id="rd-status-pill"></div>
+          </div>
+          <div class="rd-badges" id="rd-badges"></div>
+
+          <div class="rd-info">
+            <div><span>ผู้แจ้ง (รหัสนิสิต)</span><strong id="rd-student">-</strong><small id="rd-student-history"></small></div>
+            <div><span>ติดต่อกลับ</span><strong id="rd-contact">-</strong></div>
+            <div><span>เวลาแจ้ง</span><strong id="rd-time">-</strong></div>
+            <div><span>ระยะเวลา</span><strong id="rd-ago">-</strong></div>
+            <div><span>พบปัญหาตอน</span><strong id="rd-when">-</strong></div>
+            <div><span>สถานะเครื่องตอนนี้</span><strong id="rd-machine-state">-</strong></div>
+          </div>
+
+          <div class="rd-refund" id="rd-refund" hidden></div>
+
+          <h4 class="rd-section">อาการที่แจ้งเข้ามา</h4>
+          <div class="report-issues" id="rd-issues"></div>
+
+          <h4 class="rd-section">รายละเอียดจากผู้แจ้ง</h4>
+          <p class="rd-text" id="rd-extra"></p>
+
+          <h4 class="rd-section">ความคืบหน้า</h4>
+          <ol class="rd-timeline" id="rd-timeline"></ol>
+
+          <h4 class="rd-section">ประวัติของเครื่องนี้</h4>
+          <div class="rd-history" id="rd-machine-history"></div>
+
+          <h4 class="rd-section rd-section-row">บันทึกการดำเนินการ <button type="button" class="text-btn" id="rd-copy"><span data-ui-icon="clipboard"></span> คัดลอกส่งช่าง</button></h4>
+          <ol class="rd-log" id="rd-log"></ol>
+
+          <form id="rd-form" class="modal-form rd-admin">
+            <h4 class="rd-section">ระบุข้อมูลการซ่อม (แอดมิน)</h4>
+            <label class="field">
+              <span>เครื่องที่มีปัญหา</span>
+              <select id="rd-machine"></select>
+              <small class="rd-hint" id="rd-machine-hint"></small>
+            </label>
+            <div class="field">
+              <span>สถานะ</span>
+              <div class="segment-control rd-status-seg" id="rd-status-seg" role="group" aria-label="สถานะ">
+                <button type="button" class="segment-btn" data-rstatus="new">รอตรวจสอบ</button>
+                <button type="button" class="segment-btn" data-rstatus="in_progress">กำลังซ่อม</button>
+                <button type="button" class="segment-btn" data-rstatus="resolved">ซ่อมเสร็จ</button>
+              </div>
+            </div>
+            <label class="field">
+              <span>บันทึกของแอดมิน (สาเหตุ / วิธีแก้ / ช่างที่รับงาน)</span>
+              <textarea id="rd-note" rows="3" maxlength="300" placeholder="เช่น สายน้ำเข้าหลุด เปลี่ยนสายใหม่แล้ว"></textarea>
+            </label>
+            <label class="field">
+              <span>ค่าซ่อม (บาท) — ไม่บังคับ</span>
+              <input type="number" id="rd-cost" min="0" step="0.01" inputmode="decimal" placeholder="0" />
+              <small class="rd-hint">กรอกแล้วจะบันทึกลงหน้ารายจ่าย (หมวดค่าซ่อม) ให้อัตโนมัติ · ลบตัวเลขออกเพื่อยกเลิก</small>
+            </label>
+            <div class="form-actions">
+              <button type="button" class="ghost-btn" id="rd-goto-machine">ดูเครื่องนี้</button>
+              <button type="submit" class="modal-action-btn" style="background: var(--teal); color: #fff;">บันทึก</button>
+            </div>
+          </form>
+
+          <div class="modal-admin-actions">
+            <button type="button" class="ghost-btn delete-btn" id="rd-delete">ลบใบแจ้งซ่อม</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal ยืนยันทั่วไป (ใช้แทน confirm() ของเบราว์เซอร์) -->
+    <div id="confirm-modal" class="modal-backdrop" hidden>
+      <div class="modal-card alert-card">
+        <div class="alert-icon danger">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </div>
+        <h3 id="confirm-title">ยืนยัน?</h3>
+        <p id="confirm-desc" class="confirm-desc"></p>
+        <div class="form-actions">
+          <button type="button" class="ghost-btn" id="confirm-cancel-btn">ยกเลิก</button>
+          <button type="button" class="modal-action-btn" id="confirm-ok-btn" style="background: var(--red); color: #fff; border-color: var(--red);">ยืนยัน</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 6. Modal เพิ่ม / แก้ไขรายจ่าย -->
+    <div id="expense-modal" class="modal-backdrop" hidden>
+      <div class="modal-card">
+        <button class="modal-close" aria-label="ปิด">&times;</button>
+        <h2 id="expense-modal-title">เพิ่มรายจ่าย</h2>
+        <form id="expense-form" class="modal-form">
+          <label class="field">
+            <span>หมวดหมู่</span>
+            <select id="exp-category"></select>
+          </label>
+          <div class="form-grid-2">
+            <label class="field">
+              <span>จำนวนเงิน (บาท)</span>
+              <input type="number" id="exp-amount" min="0.01" step="0.01" inputmode="decimal" placeholder="0" required />
+            </label>
+            <label class="field">
+              <span>วันที่จ่าย</span>
+              <input type="date" id="exp-date" required />
+            </label>
+          </div>
+          <label class="field">
+            <span>เครื่องที่เกี่ยวข้อง</span>
+            <select id="exp-machine"></select>
+          </label>
+          <label class="field">
+            <span>รายละเอียด</span>
+            <input type="text" id="exp-note" maxlength="120" placeholder="เช่น ค่าไฟรอบบิลเดือนนี้" autocomplete="off" />
+          </label>
+          <div class="form-actions">
+            <button type="button" class="ghost-btn" id="expense-cancel-btn">ยกเลิก</button>
+            <button type="submit" class="modal-action-btn" style="background: var(--teal); color: #fff;">บันทึก</button>
+          </div>
+        </form>
+        <div class="modal-admin-actions" id="expense-delete-row" hidden>
+          <button type="button" class="ghost-btn delete-btn" id="expense-delete-btn">ลบรายการนี้</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 7. Modal ยืนยันการลบรายจ่าย -->
+    <div id="expense-delete-modal" class="modal-backdrop" hidden>
+      <div class="modal-card alert-card">
+        <div class="alert-icon danger">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </div>
+        <h3>ลบรายจ่ายนี้?</h3>
+        <p id="expense-delete-desc">รายการจะถูกลบออกถาวร</p>
+        <div class="form-actions">
+          <button type="button" class="ghost-btn" id="expense-delete-cancel-btn">ยกเลิก</button>
+          <button type="button" class="modal-action-btn" id="expense-delete-confirm-btn" style="background: var(--red); color: #fff; border-color: var(--red);">ลบรายการ</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+<script src="../icons.js"></script>
+<script src="../firebase-config.js"></script>
+<script src="../shared-data.js"></script>
+<script src="../firebase-sync.js"></script>
+<script src="script_ad.js"></script>
+<script src="finance.js"></script>
+<script src="reports.js"></script>
+</body>
+</html>

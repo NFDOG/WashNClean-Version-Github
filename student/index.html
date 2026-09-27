@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Home · WashNclean UP</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css" />
+<link rel="icon" type="image/x-icon" href="../icon.png">
+
+</head>
+<body>
+
+  <div class="app">
+
+    <header class="topbar">
+      <a class="back-link" id="back-link" href="../index.html" aria-label="กลับหน้าแรก"></a>
+      <h1 id="topbar-title">รายการ</h1>
+      <button class="chat-btn" id="feedback-toggle" aria-label="แจ้งปัญหา" aria-pressed="false"></button>
+    </header>
+
+    <!-- ---------- machine list view ---------- -->
+    <section class="view" id="view-list">
+      <div class="grid" id="machine-grid"></div>
+    </section>
+
+    <!-- ---------- feedback view (แจ้งปัญหาการใช้งาน) ---------- -->
+    <section class="view" id="view-feedback" hidden>
+      <div class="rf-hero">
+        <div class="feedback-icon"></div>
+        <h2>แจ้งปัญหาการใช้งาน</h2>
+        <p class="feedback-sub">ใช้เวลาไม่ถึง 1 นาที · แอดมินได้รับแจ้งทันที และติดตามผลได้ท้ายหน้านี้</p>
+        <ol class="rf-steps" id="rf-steps">
+          <li data-step="machine"><span class="rf-step-dot">1</span><span class="rf-step-label">เครื่อง</span></li>
+          <li data-step="issue"><span class="rf-step-dot">2</span><span class="rf-step-label">อาการ</span></li>
+          <li data-step="photo"><span class="rf-step-dot">3</span><span class="rf-step-label">รูปถ่าย</span></li>
+          <li data-step="reporter"><span class="rf-step-dot">4</span><span class="rf-step-label">ผู้แจ้ง</span></li>
+        </ol>
+        <div class="rf-progress" aria-hidden="true"><div class="rf-progress-fill" id="rf-progress-fill"></div></div>
+        <p class="rf-progress-text" id="rf-progress-text">กรอกแล้ว 0 จาก 4 ขั้นตอน</p>
+      </div>
+
+      <form id="feedback-form" novalidate>
+        <input type="hidden" id="fb-machine" />
+
+        <!-- 1. เครื่อง -->
+        <section class="rf-card" id="rf-sec-machine" data-step="machine">
+          <header class="rf-card-head">
+            <span class="rf-num">1</span>
+            <div><h3>เลือกเครื่องที่มีปัญหา</h3><p>ดูหมายเลขได้จากสติกเกอร์ด้านหน้าเครื่อง</p></div>
+          </header>
+          <div class="rf-type-toggle" role="group" aria-label="ประเภทเครื่อง">
+            <button type="button" class="rf-type active" data-type="washer"><span class="rf-type-icon" data-icon="washer"></span>เครื่องซักผ้า <b id="rf-count-washer"></b></button>
+            <button type="button" class="rf-type" data-type="iron"><span class="rf-type-icon" data-icon="iron"></span>เตารีด <b id="rf-count-iron"></b></button>
+          </div>
+          <div class="rf-machine-grid" id="rf-machine-grid"></div>
+          <p class="rf-error" data-error-for="machine" role="alert"></p>
+        </section>
+
+        <!-- 2. อาการ -->
+        <section class="rf-card" id="rf-sec-issue" data-step="issue">
+          <header class="rf-card-head">
+            <span class="rf-num">2</span>
+            <div><h3>อาการที่พบ</h3><p>เลือกได้มากกว่า 1 ข้อ</p></div>
+          </header>
+          <div class="rf-issue-grid" id="rf-issue-grid"></div>
+
+          <div class="rf-danger" id="rf-danger" hidden>
+            <strong class="rf-danger-title"><span class="rf-danger-icon" data-ui-icon="alert"></span>เพื่อความปลอดภัย</strong>
+            <span>อย่าสัมผัสเครื่อง ห้ามใช้มือเปียกจับปลั๊ก และบอกคนรอบข้างให้ออกห่าง</span>
+            <a class="rf-call" id="rf-call" href="#">โทรหาแอดมินทันที</a>
+          </div>
+
+          <div class="rf-sub-field">
+            <span class="rf-label">ความรุนแรง <em>*</em></span>
+            <div class="rf-severity" id="rf-severity" role="radiogroup" aria-label="ความรุนแรง">
+              <label class="rf-sev sev-minor"><input type="radio" name="severity" value="minor" /><span class="rf-sev-dot"></span><span class="rf-sev-text"><b>ผิดปกติเล็กน้อย</b><small>ยังพอใช้งานได้</small></span></label>
+              <label class="rf-sev sev-unusable"><input type="radio" name="severity" value="unusable" /><span class="rf-sev-dot"></span><span class="rf-sev-text"><b>ใช้งานไม่ได้</b><small>เครื่องทำงานไม่ได้เลย</small></span></label>
+              <label class="rf-sev sev-danger"><input type="radio" name="severity" value="danger" /><span class="rf-sev-dot"></span><span class="rf-sev-text"><b>อันตราย</b><small>ไฟรั่ว ควัน กลิ่นไหม้</small></span></label>
+            </div>
+          </div>
+
+          <div class="rf-sub-field">
+            <span class="rf-label">พบปัญหาตอนไหน</span>
+            <div class="rf-pills" role="radiogroup" aria-label="พบปัญหาตอนไหน">
+              <label class="rf-pill"><input type="radio" name="when" value="before" /><span>ก่อนเริ่มใช้งาน</span></label>
+              <label class="rf-pill"><input type="radio" name="when" value="during" /><span>ระหว่างใช้งาน</span></label>
+              <label class="rf-pill"><input type="radio" name="when" value="after" /><span>หลังใช้งานเสร็จ</span></label>
+            </div>
+          </div>
+
+          <div class="rf-money" id="rf-money">
+            <label class="rf-switch">
+              <input type="checkbox" id="rf-lost" />
+              <span class="rf-switch-ui" aria-hidden="true"></span>
+              <span class="rf-switch-text"><b>หยอดเหรียญไปแล้วแต่ใช้ไม่ได้</b><small>บอกจำนวนเงินเพื่อขอคืนได้</small></span>
+            </label>
+            <div class="rf-money-body" id="rf-money-body" hidden>
+              <div class="rf-stepper">
+                <button type="button" data-money="-10" aria-label="ลด 10 บาท">−</button>
+                <output id="rf-money-val">฿10</output>
+                <button type="button" data-money="10" aria-label="เพิ่ม 10 บาท">+</button>
+              </div>
+              <label class="rf-check"><input type="checkbox" id="rf-refund" checked /> <span>ขอคืนเงินจำนวนนี้</span></label>
+            </div>
+          </div>
+          <p class="rf-error" data-error-for="issue" role="alert"></p>
+        </section>
+
+        <!-- 3. รูป + รายละเอียด -->
+        <section class="rf-card" id="rf-sec-photo" data-step="photo">
+          <header class="rf-card-head">
+            <span class="rf-num">3</span>
+            <div><h3>รูปถ่ายและรายละเอียด</h3><p>แนบรูปอย่างน้อย 1 รูป (สูงสุด 3 รูป)</p></div>
+          </header>
+          <div class="rf-photos" id="rf-photos">
+            <label class="rf-photo-add" id="rf-photo-add">
+              <input type="file" id="fb-photo" accept="image/*" multiple hidden />
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="8" width="18" height="12" rx="2" ry="2"></rect><circle cx="12" cy="14" r="3"></circle><path d="M7 8v-2a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v2"></path></svg>
+              <span>ถ่ายรูป / เลือกรูป</span>
+              <small id="rf-photo-count">0/3</small>
+            </label>
+          </div>
+          <ul class="rf-tips">
+            <li>ถ่ายให้เห็น<b>หมายเลขเครื่อง</b> แอดมินจะรู้ทันทีว่าเครื่องไหน</li>
+            <li>ถ่ายจุดที่มีปัญหาใกล้ๆ เช่น น้ำรั่ว ปลั๊กไหม้ หน้าจอ error</li>
+          </ul>
+          <label class="field">
+            <span>อธิบายเพิ่มเติม</span>
+            <textarea id="fb-detail" rows="3" maxlength="300" placeholder="เช่น เครื่องหยุดกลางคันตอนปั่นหมาด หน้าจอขึ้น E21"></textarea>
+            <small class="rf-counter" id="rf-detail-count">0/300</small>
+          </label>
+          <p class="rf-error" data-error-for="photo" role="alert"></p>
+        </section>
+
+        <!-- 4. ผู้แจ้ง -->
+        <section class="rf-card" id="rf-sec-reporter" data-step="reporter">
+          <header class="rf-card-head">
+            <span class="rf-num">4</span>
+            <div><h3>ข้อมูลผู้แจ้ง</h3><p>ใช้ติดตามผลและติดต่อกลับเท่านั้น</p></div>
+          </header>
+          <label class="field">
+            <span>รหัสนิสิต <em>*</em></span>
+            <div class="rf-input-wrap">
+              <input type="text" id="fb-studentid" placeholder="เช่น 68026080" maxlength="8" inputmode="numeric" autocomplete="off" />
+              <span class="rf-valid" id="rf-id-ok" aria-hidden="true" hidden>✓</span>
+            </div>
+          </label>
+          <label class="rf-check"><input type="checkbox" id="rf-remember" checked /> <span>จำรหัสนิสิตไว้ในเครื่องนี้ (ใช้ติดตามการแจ้งของฉัน)</span></label>
+          <label class="field">
+            <span>ช่องทางติดต่อกลับ <small>(ไม่บังคับ)</small></span>
+            <input type="text" id="fb-contact" maxlength="40" placeholder="เบอร์โทร หรือ LINE ID" autocomplete="off" />
+          </label>
+          <div class="security-notice">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+            </svg>
+            <p><strong>บันทึกความปลอดภัย:</strong> ระบบจะเก็บข้อมูลอุปกรณ์และเวลาที่ทำรายการ เพื่อป้องกันการก่อกวน</p>
+          </div>
+          <p class="rf-error" data-error-for="reporter" role="alert"></p>
+        </section>
+
+        <div class="rf-submit">
+          <p class="rf-summary" id="rf-summary">ยังไม่ได้เลือกเครื่อง</p>
+          <button type="submit" class="send-btn" id="submit-btn" aria-label="ตรวจสอบและส่งรายงาน">ตรวจสอบและส่งรายงาน</button>
+          <p class="feedback-status" id="feedback-status" role="status"></p>
+        </div>
+      </form>
+
+      <section class="rf-card rf-mine" id="rf-mine" hidden>
+        <header class="rf-card-head">
+          <span class="rf-num rf-num-track">✓</span>
+          <div><h3>การแจ้งของฉัน</h3><p>สถานะอัปเดตอัตโนมัติเมื่อแอดมินดำเนินการ</p></div>
+        </header>
+        <div class="rf-mine-list" id="rf-mine-list"></div>
+      </section>
+    </section>
+
+    <!-- ---------- ตรวจสอบก่อนส่ง ---------- -->
+    <div id="review-modal" class="modal-backdrop" hidden>
+      <div class="modal-card review-card">
+        <button class="modal-close" id="review-close" aria-label="ปิด">&times;</button>
+        <h3 class="rv-title">ตรวจสอบก่อนส่ง</h3>
+        <div class="rv-machine" id="rv-machine"></div>
+        <dl class="rv-list" id="rv-list"></dl>
+        <div class="rv-photos" id="rv-photos"></div>
+        <div class="rv-actions">
+          <button type="button" class="rv-back" id="review-back">แก้ไข</button>
+          <button type="button" class="send-btn" id="review-confirm">ยืนยันส่งรายงาน</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ---------- Alert Success Modal ---------- -->
+    <div id="success-modal" class="modal-backdrop" hidden>
+      <div class="modal-card success-alert-card">
+        <div class="success-circle">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M7 13l3 3 7-7" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <h3 style="margin: 10px 0 5px; font-family: 'Baloo 2', 'IBM Plex Sans Thai', sans-serif; font-size: 1.5rem;">ส่งรายงานสำเร็จ!</h3>
+        <p style="color: var(--navy-soft); font-size: 0.9rem; margin-bottom: 14px;">ขอบคุณสำหรับการแจ้งปัญหา<br>แอดมินได้รับเรื่องแล้วครับ</p>
+        <div class="ticket" id="success-ticket"></div>
+        <button class="modal-action-btn" id="success-track-btn" style="margin-bottom: 8px;">ติดตามสถานะการแจ้ง</button>
+        <button class="modal-action-btn" id="success-close-btn" style="background: var(--teal); color: #fff;">กลับหน้ารายการเครื่อง</button>
+      </div>
+    </div>
+
+    <!-- ---------- Modal สำหรับดูรายละเอียดเครื่อง ---------- -->
+    <div id="machine-modal" class="modal-backdrop" hidden>
+      <div class="modal-card">
+        <button class="modal-close" id="modal-close" aria-label="ปิด">&times;</button>
+        <div class="modal-icon" id="modal-icon"></div>
+        <h2 id="modal-title">เครื่องซักผ้า 1</h2>
+        <div class="modal-status-badge" id="modal-status">ว่าง</div>
+        
+        <div class="modal-details">
+          <div class="detail-row">
+            <span>เวลาที่เหลือ/เวลาใช้งาน:</span>
+            <strong id="modal-time">--:--</strong>
+          </div>
+          <div class="detail-row">
+            <span>หมวดหมู่:</span>
+            <strong id="modal-category">เครื่องซักผ้า</strong>
+          </div>
+        </div>
+        
+        <button class="modal-action-btn" id="modal-action-btn">รายงานปัญหาเครื่องนี้</button>
+      </div>
+    </div>
+
+    <nav class="bottom-nav">
+      <button class="nav-icon is-active" data-cat="washer" aria-label="เครื่องซัก"></button>
+      <button class="nav-icon" data-cat="iron" aria-label="เตารีด"></button>
+    </nav>
+
+  </div>
+
+<script src="../icons.js"></script>
+<script src="../firebase-config.js"></script>
+<script src="../shared-data.js"></script>
+<script src="../firebase-sync.js"></script>
+<script src="report-form.js"></script>
+<script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ศูนย์ช่วยเหลือ · WashNclean UP</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="icon" type="image/x-icon" href="icon.png" />
+
+<style>
+  :root {
+    --sky-top: #eaf7fb;
+    --sky-bottom: #ffffff;
+    --navy: #1c2b52;
+    --navy-soft: #55618a;
+    --teal: #2bb8d6;
+    --teal-soft: #dff3fa;
+    --teal-deep: #1c98b4;
+    --line: #dfeef3;
+  }
+
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+  /* เพิ่มการเลื่อนแบบนุ่มนวล */
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background: linear-gradient(180deg, var(--sky-top) 0%, var(--sky-bottom) 100%);
+    background-attachment: fixed;
+    font-family: "IBM Plex Sans Thai", sans-serif;
+    color: var(--navy);
+  }
+
+  .about-container {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 40px 20px 100px;
+    animation: fadeUp 0.6s ease-out forwards;
+  }
+
+  /* ส่วนหัวของหน้า */
+  .topbar {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 40px;
+  }
+  .back-btn {
+    width: 44px;
+    height: 44px;
+    background: #fff;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--navy);
+    text-decoration: none;
+    box-shadow: 0 4px 14px rgba(28, 43, 82, 0.08);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .back-btn:hover {
+    transform: translateX(-4px);
+    box-shadow: 0 6px 18px rgba(28, 43, 82, 0.12);
+  }
+  .topbar h1 {
+    font-family: "Baloo 2", "IBM Plex Sans Thai", sans-serif;
+    font-size: 1.8rem;
+    margin: 0;
+    color: var(--navy);
+  }
+
+  /* สไตล์กล่องเนื้อหา */
+  .content-card {
+    background: #fff;
+    border-radius: 24px;
+    padding: 32px 28px;
+    margin-bottom: 24px;
+    box-shadow: 0 8px 24px rgba(28, 43, 82, 0.04);
+    border: 1.5px solid #f0f7f9;
+    /* เพิ่มระยะเว้นด้านบนตอนลิงก์เด้งมาหา จะได้ไม่ชิดขอบจอเกินไป */
+    scroll-margin-top: 24px; 
+  }
+
+  .card-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 2px solid var(--line);
+  }
+  .card-icon {
+    width: 36px;
+    height: 36px;
+    background: var(--teal-soft);
+    color: var(--teal-deep);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .card-icon svg { width: 20px; height: 20px; }
+  .card-header h2 {
+    font-size: 1.3rem;
+    margin: 0;
+    color: var(--navy);
+    font-weight: 700;
+  }
+
+  /* 1. เกี่ยวกับระบบ */
+  .about-text {
+    line-height: 1.7;
+    color: var(--navy-soft);
+    margin: 0;
+    font-size: 0.95rem;
+  }
+  .about-text strong { color: var(--navy); }
+
+  /* 2. วิธีใช้งาน */
+  .step-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  .step-item {
+    display: flex;
+    gap: 16px;
+  }
+  .step-num {
+    width: 34px;
+    height: 34px;
+    flex-shrink: 0;
+    background: var(--teal);
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 1.1rem;
+    font-family: "Baloo 2", "IBM Plex Sans Thai", sans-serif;
+    box-shadow: 0 4px 10px rgba(43, 184, 214, 0.25);
+  }
+  .step-text h4 {
+    margin: 0 0 4px;
+    font-size: 1.05rem;
+    color: var(--navy);
+  }
+  .step-text p {
+    margin: 0;
+    color: var(--navy-soft);
+    font-size: 0.9rem;
+    line-height: 1.6;
+  }
+
+  /* 3. คำถามที่พบบ่อย (FAQ) */
+  .faq-item {
+    background: #f9fcfd;
+    border: 1.5px solid var(--line);
+    border-radius: 16px;
+    padding: 16px 20px;
+    margin-bottom: 12px;
+  }
+  .faq-item:last-child { margin-bottom: 0; }
+  .faq-q {
+    font-weight: 700;
+    color: var(--navy);
+    margin: 0 0 8px;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 0.95rem;
+  }
+  .faq-q::before {
+    content: "Q:";
+    color: var(--teal);
+    font-family: "Baloo 2", "IBM Plex Sans Thai", sans-serif;
+    font-size: 1.1rem;
+  }
+  .faq-a {
+    margin: 0;
+    color: var(--navy-soft);
+    font-size: 0.9rem;
+    line-height: 1.6;
+    padding-left: 28px;
+  }
+
+  /* 4. ข้อตกลงการใช้งาน */
+  .terms-list {
+    margin: 0;
+    padding-left: 20px;
+    color: var(--navy-soft);
+    line-height: 1.7;
+    font-size: 0.95rem;
+  }
+  .terms-list li { margin-bottom: 12px; }
+  .terms-list li::marker { color: var(--teal); font-weight: bold; }
+  .terms-list strong { color: var(--navy); }
+
+  @keyframes fadeUp {
+    0% { opacity: 0; transform: translateY(20px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (max-width: 600px) {
+    .about-container { padding: 30px 16px 80px; }
+    .content-card { padding: 24px 20px; border-radius: 20px; }
+    .topbar h1 { font-size: 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+  <div class="about-container">
+    
+    <!-- Topbar & Back Button -->
+    <header class="topbar">
+      <a href="index.html" class="back-btn" title="กลับหน้าแรก">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
+          <path d="M15 18l-6-6 6-6"/>
+        </svg>
+      </a>
+      <h1>ศูนย์ช่วยเหลือ & ข้อมูล</h1>
+    </header>
+
+    <!-- Section 1: เกี่ยวกับระบบ -->
+    <section class="content-card" id="about-us">
+      <div class="card-header">
+        <div class="card-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+        </div>
+        <h2>เกี่ยวกับ WashNclean UP</h2>
+      </div>
+      <p class="about-text">
+        <strong>WashNclean UP</strong> คือเว็บแอปพลิเคชันที่สร้างขึ้นมาเพื่อแก้ปัญหาคลาสสิกของชาวหอพักมหาวิทยาลัยพะเยา นั่นคือ "การเดินลงไปดูเครื่องซักผ้าแล้วพบว่าเครื่องเต็ม" เรามุ่งหวังให้ทุกคนสามารถตรวจสอบสถานะของเครื่องซักผ้าและเตารีดส่วนกลางได้แบบเรียลไทม์จากบนห้องพัก ช่วยประหยัดเวลาและทำให้การใช้ชีวิตในหอพักสะดวกสบายยิ่งขึ้น
+      </p>
+    </section>
+
+    <!-- Section 2: วิธีใช้งาน -->
+    <section class="content-card" id="how-to">
+      <div class="card-header">
+        <div class="card-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+        </div>
+        <h2>วิธีใช้งานเบื้องต้น</h2>
+      </div>
+      <div class="step-list">
+        <div class="step-item">
+          <div class="step-num">1</div>
+          <div class="step-text">
+            <h4>เช็คสถานะก่อนลงไป</h4>
+            <p>เปิดหน้าเว็บเพื่อดูสถานะเครื่องซักผ้า หรือเตารีด (สลับแท็บได้ที่เมนูด้านล่าง) หากเป็นสีเขียวแปลว่า "ว่าง" สามารถนำผ้าลงไปซักได้เลย</p>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">2</div>
+          <div class="step-text">
+            <h4>ติดตามเวลาซัก</h4>
+            <p>หากเครื่องกำลังทำงาน ระบบจะแสดงเวลาถอยหลังโดยประมาณ คุณสามารถกะเวลาลงไปรับผ้าได้โดยไม่ต้องไปยืนรอ</p>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">3</div>
+          <div class="step-text">
+            <h4>แจ้งปัญหาเมื่อเครื่องเสีย</h4>
+            <p>หากพบว่าเครื่องใช้งานไม่ได้ น้ำไม่ไหล หรือมีปัญหาอื่นๆ สามารถกดที่ไอคอนแชท (แจ้งปัญหา) มุมขวาบน ถ่ายรูปและส่งให้แอดมินดำเนินการได้ทันที</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 3: คำถามที่พบบ่อย (FAQ) -->
+    <section class="content-card" id="faq">
+      <div class="card-header">
+        <div class="card-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+        </div>
+        <h2>คำถามที่พบบ่อย (FAQ)</h2>
+      </div>
+      
+      <div class="faq-item">
+        <p class="faq-q">ข้อมูลอัปเดตแบบเรียลไทม์หรือไม่?</p>
+        <p class="faq-a">ใช่ครับ ระบบจะดึงข้อมูลสถานะของเครื่องและเวลาที่เหลืออยู่อัตโนมัติทุกๆ 1 วินาที โดยที่คุณไม่ต้องกดรีเฟรชหน้าจอเอง</p>
+      </div>
+      <div class="faq-item">
+        <p class="faq-q">ต้องสมัครสมาชิกก่อนใช้งานไหม?</p>
+        <p class="faq-a">ไม่จำเป็นครับ WashNclean UP ถูกออกแบบมาให้ทุกคนเปิดเบราว์เซอร์แล้วเข้าดูสถานะได้ทันทีโดยไม่ต้องเข้าสู่ระบบ</p>
+      </div>
+      <div class="faq-item">
+        <p class="faq-q">แจ้งปัญหาเครื่องเสียไปแล้ว แอดมินจะเห็นเมื่อไหร่?</p>
+        <p class="faq-a">ระบบจะส่งข้อมูลรูปภาพและรายละเอียดไปยังระบบหลังบ้านของแอดมินทันที และสถานะเครื่องนั้นจะถูกเปลี่ยนเป็น "เครื่องมีปัญหา" เพื่อแจ้งเตือนให้คนอื่นทราบด้วย</p>
+      </div>
+    </section>
+
+    <!-- Section 4: ข้อตกลงการใช้งาน -->
+    <section class="content-card" id="terms">
+      <div class="card-header">
+        <div class="card-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+        </div>
+        <h2>ข้อตกลงการใช้งาน</h2>
+      </div>
+      <ul class="terms-list">
+        <li><strong>การตรงต่อเวลา:</strong> เมื่อระบบแจ้งเตือนว่าเครื่องทำงานเสร็จแล้ว ขอความร่วมมือผู้ใช้นำผ้าออกจากเครื่องทันที เพื่อให้ผู้อื่นสามารถใช้งานต่อได้</li>
+        <li><strong>การแจ้งปัญหาเท็จ:</strong> ห้ามสแปมหรือส่งข้อมูลแจ้งซ่อมเท็จ ระบบจะมีการเก็บ Log และรหัสนิสิตไว้เพื่อตรวจสอบ หากพบการป่วนระบบอาจถูกตัดสิทธิ์การใช้งาน</li>
+        <li><strong>ความเป็นส่วนตัว:</strong> การถ่ายภาพเพื่อรายงานปัญหา กรุณาหลีกเลี่ยงการถ่ายติดใบหน้าของบุคคลอื่นโดยไม่ได้รับอนุญาต</li>
+        <li><strong>การดูแลรักษา:</strong> ผู้ใช้ควรช่วยกันรักษาความสะอาดของเครื่องซักผ้าและเตารีดส่วนกลาง เพื่อสุขอนามัยที่ดีของส่วนรวม</li>
+      </ul>
+    </section>
+
+  </div>
+
+  <!-- สคริปต์ช่วยเลื่อนหน้าจออัตโนมัติเมื่อมีการเปิดลิงก์มาจากหน้าอื่น -->
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      // ตรวจสอบว่า URL มีการแนบ ID มาด้วยหรือไม่ (เช่น #faq)
+      const hash = window.location.hash;
+      if (hash) {
+        // หน่วงเวลาเล็กน้อยให้ CSS อนิเมชัน FadeUp โหลดเสร็จก่อน เบราว์เซอร์จะได้คำนวณตำแหน่งถูก
+        setTimeout(() => {
+          // ใช้ getElementById: #id ที่ขึ้นต้นด้วยตัวเลข/ภาษาไทย ทำให้ querySelector error
+          let targetElement = null;
+          try { targetElement = document.getElementById(decodeURIComponent(hash.slice(1))); } catch (e) { targetElement = null; }
+          if (targetElement) {
+            targetElement.scrollIntoView({ behavior: "smooth" });
+          }
+        }, 150);
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- รายละเอียดปก Cover Link -->
+  <meta property="og:title" content="WashNcleanUP บริการเว็บแอปเช็กสถานะเครื่องซักผ้าและเตารีด">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://wash-n-clean-up.vercel.app/index.html">
+  <meta property="og:image"
+    content="https://oc6ocalbdr0redzl.private.blob.vercel-storage.com/2.png?vercel-blob-delegation=eyJzdG9yZUlkIjoic3RvcmVfb0M2T0NhbGJkcjBSZWR6bCIsIm93bmVySWQiOiJ0ZWFtXzY4Rmk2SDRTZmJGbmtWZ3lHVE5JTE9EYiIsInBhdGhuYW1lIjoiKiIsIm9wZXJhdGlvbnMiOlsiZ2V0IiwiaGVhZCJdLCJ2YWxpZFVudGlsIjoxNzkwNTQ0MjczNzAzLCJpYXQiOjE3OTA1MDEwNzM5NzZ9.jkbrWoLqYOqFjpUKoCsGkJgl8SIhZvuC-aZ2AiLmMnc&vercel-blob-signature=SG7L1Mn6aBlRQImAG7TrW_qsdEFDJ-yxYLCR_RjmfEo">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:description" content="เว็บแอปเช็กสถานะเครื่องซักผ้าและเตารีดสำหรับหอพักมหาวิทยาลัยพะเยา">
+  <meta property="og:site_name" content="WashNcleanUP">
+
+  <title>WashNclean UP</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="landing.css" />
+  <link rel="icon" type="image/x-icon" href="icon.png" />
+</head>
+
+<body>
+
+  <!-- Section (100vh) -->
+  <main class="stage">
+    <div class="hero-art" aria-hidden="true">
+      <svg viewBox="0 0 220 220" class="hero-svg">
+        <circle cx="110" cy="110" r="100" fill="url(#bg)" />
+        <defs>
+          <radialGradient id="bg" cx="50%" cy="40%" r="70%">
+            <stop offset="0%" stop-color="#ffffff" />
+            <stop offset="100%" stop-color="#dff3fa" />
+          </radialGradient>
+        </defs>
+
+        <circle cx="42" cy="55" r="7" fill="#ffd166" opacity=".9" class="bubble bubble-1" />
+        <circle cx="176" cy="48" r="10" fill="#ff8fa3" opacity=".9" class="bubble bubble-2" />
+        <circle cx="188" cy="150" r="6" fill="#8fd3f4" opacity=".9" class="bubble bubble-3" />
+        <circle cx="34" cy="150" r="9" fill="#a0e3c2" opacity=".9" class="bubble bubble-4" />
+
+        <g class="washing-machine">
+          <rect x="55" y="42" width="110" height="132" rx="20" fill="#ffffff" stroke="#1c2b52" stroke-width="4" />
+          <circle cx="72" cy="58" r="4" fill="#1c2b52" />
+          <circle cx="86" cy="58" r="4" fill="#1c2b52" />
+          <rect x="118" y="52" width="34" height="10" rx="5" fill="#eaf6fb" stroke="#1c2b52" stroke-width="2.4" />
+          <circle cx="110" cy="118" r="42" fill="#eaf6fb" stroke="#1c2b52" stroke-width="4" />
+
+          <g class="drum">
+            <circle cx="110" cy="118" r="28" fill="#ffffff" stroke="#2bb8d6" stroke-width="4" />
+            <path d="M96 112c4 7 10 7 14 0s10-7 14 0" stroke="#2bb8d6" stroke-width="3.4" fill="none"
+              stroke-linecap="round" />
+            <path d="M96 128c4 7 10 7 14 0s10-7 14 0" stroke="#8fd8e8" stroke-width="3" fill="none"
+              stroke-linecap="round" />
+          </g>
+        </g>
+      </svg>
+    </div>
+
+    <h1 class="brand">Wash<span>N</span>clean <span class="brand-up">UP</span></h1>
+
+    <p class="tag">
+      <span class="typewriter-container">
+        <span id="dynamic-tag"></span><span class="cursor"></span>
+      </span>
+    </p>
+
+    <div class="choice-group">
+      <a class="choice choice-primary" href="student/index.html">ลองเลย!</a>
+    </div>
+
+    <div class="scroll-indicator" id="scroll-indicator">
+      <span>เลื่อนดูรายละเอียด</span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+        stroke-linejoin="round">
+        <polyline points="6 9 12 15 18 9"></polyline>
+      </svg>
+    </div>
+  </main>
+
+  <!-- Section รายละเอียด -->
+  <section class="details-section" id="details-section">
+    <span class="fb fb1"></span><span class="fb fb2"></span><span class="fb fb3"></span><span class="fb fb4"></span>
+    <div class="details-container">
+      <div class="why-head rv">
+        <span class="section-badge">ทำไมต้องใช้ WashNclean UP</span>
+        <h2 class="details-title">ดูก่อนลงไป ไม่ต้องเสียเที่ยว</h2>
+        <p class="why-lead">เรื่องซักผ้าไม่ควรกินเวลาไปกับการเดินลงไปดูเครื่องเอง ให้มือถือดูแทนคุณ</p>
+      </div>
+
+      <div class="why-grid">
+        <div class="app-card rv" id="demo-card" aria-label="ตัวอย่างหน้าจอสถานะเครื่อง">
+          <div class="app-top">
+            <span class="app-title">ตัวอย่างหน้าจอสถานะเครื่อง</span>
+          </div>
+          <div class="tile-grid" id="tile-grid"></div>
+          <p class="app-note">ตัวอย่างประกอบ ข้อมูลจริงดูได้ในหน้าใช้งาน</p>
+        </div>
+
+        <div class="reasons">
+          <div class="reason rv" style="--d:.1s">
+            <p class="r-before"><span>เดินลงไปดูเองว่าเครื่องว่างไหม</span></p>
+            <p class="r-after">เห็นสถานะทุกเครื่องจากบนห้อง รู้ก่อนว่าคุ้มที่จะลงไปหรือเปล่า</p>
+          </div>
+          <div class="reason rv" style="--d:.2s">
+            <p class="r-before"><span>ไม่รู้ว่าเครื่องที่ใช้อยู่จะเสร็จตอนไหน</span></p>
+            <p class="r-after">มีเวลาถอยหลังของแต่ละเครื่อง ลงไปตอนผ้าพร้อมเอา ไม่ต้องยืนรอ</p>
+          </div>
+          <div class="reason rv" style="--d:.3s">
+            <p class="r-before"><span>หอบชุดไปรีด แล้วเตารีดถูกใช้อยู่</span></p>
+            <p class="r-after">เช็คสถานะเตารีดส่วนกลางก่อนเดินไป ว่าตัวไหนว่างพร้อมใช้</p>
+          </div>
+          <div class="reason rv" style="--d:.4s">
+            <p class="r-before"><span>เครื่องเสีย แต่ไม่รู้จะบอกใคร</span></p>
+            <p class="r-after">ถ่ายรูปแล้วกดแจ้งผ่านเว็บ แอดมินได้รับเรื่องทันที คนอื่นก็รู้ว่าเครื่องนั้นใช้ไม่ได้</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="why-points">
+        <div class="why-point rv" style="--d:.05s"><i style="background:#ffd166"></i>
+          <div><strong>ไม่ต้องโหลดแอป</strong><span>เปิดผ่านเบราว์เซอร์บนมือถือได้ทันที</span></div>
+        </div>
+        <div class="why-point rv" style="--d:.15s"><i style="background:#8fd3f4"></i>
+          <div><strong>ไม่ต้องสมัครสมาชิก</strong><span>กดเข้าไปดูสถานะได้เลย</span></div>
+        </div>
+        <div class="why-point rv" style="--d:.25s"><i style="background:#ff8fa3"></i>
+          <div><strong>ทำมาเพื่อชาวหอโดยเฉพาะ</strong><span>โดยนักศึกษาที่ใช้เครื่องซักผ้าหอทุกวัน</span></div>
+        </div>
+      </div>
+
+      <div class="why-cta rv">
+        <div class="cta-washer" id="cta-washer"></div>
+        <h3>ซักผ้ารอบหน้า ลองเช็คก่อนลงไป</h3>
+        <a class="choice choice-primary" href="student/index.html">ลองเลย!</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+
+    <div class="footer-decorations" aria-hidden="true">
+      <div class="f-bubble f-bubble-1"></div>
+      <div class="f-bubble f-bubble-2"></div>
+      <div class="f-bubble f-bubble-3"></div>
+      <svg class="f-sparkle f-sparkle-1" viewBox="0 0 24 24" fill="none">
+        <path d="M12 2L15 9L22 12L15 15L12 22L9 15L2 12L9 9L12 2Z" fill="#ffd166" />
+      </svg>
+      <svg class="f-sparkle f-sparkle-2" viewBox="0 0 24 24" fill="none">
+        <path d="M12 2L15 9L22 12L15 15L12 22L9 15L2 12L9 9L12 2Z" fill="#8fd3f4" />
+      </svg>
+      <svg class="f-sparkle f-sparkle-3" viewBox="0 0 24 24" fill="none">
+        <path d="M12 2L15 9L22 12L15 15L12 22L9 15L2 12L9 9L12 2Z" fill="#ff8fa3" />
+      </svg>
+    </div>
+
+    <div class="footer-container">
+      <div class="footer-top">
+
+        <div class="footer-brand-col">
+          <h2 class="footer-brand">Wash<span>N</span>clean <span>UP</span></h2>
+          <p class="footer-desc">เว็บแอปพลิเคชันเช็คสถานะเครื่องซักผ้าและเตารีดส่วนกลางสำหรับชาวหอพัก
+            พัฒนาเพื่อชีวิตที่ง่ายขึ้น ไม่ต้องเดินลงไปเก้ออีกต่อไป</p>
+        </div>
+
+        <div class="footer-links-group">
+          <div class="footer-link-col">
+            <h4>บริการของเรา</h4>
+            <ul>
+              <li><a href="student/index.html?tab=washer">เช็คสถานะเครื่องซักผ้า</a></li>
+              <li><a href="student/index.html?tab=iron">เช็คสถานะเตารีด</a></li>
+              <li><a href="student/index.html?tab=feedback">แจ้งเครื่องเสีย</a></li>
+            </ul>
+          </div>
+          <div class="footer-link-col">
+            <h4>เกี่ยวกับระบบ</h4>
+            <ul>
+              <li><a href="#" onclick="openAboutModal('about-us'); return false;">เกี่ยวกับ WashNclean UP</a></li>
+              <li><a href="#" onclick="openAboutModal('how-to'); return false;">วิธีใช้งาน</a></li>
+              <li><a href="#" onclick="openAboutModal('faq'); return false;">คำถามที่พบบ่อย</a></li>
+              <li><a href="#" onclick="openAboutModal('terms'); return false;">ข้อตกลงการใช้งาน</a></li>
+            </ul>
+          </div>
+          <div class="footer-link-col">
+            <h4>การติดต่อ</h4>
+            <ul>
+              <li><a href="https://www.facebook.com/nuttada.netpub/" target="_blank">Facebook Page</a></li>
+              <li><a href="https://teams.microsoft.com/l/chat/0/0?users=68026080@up.ac.th"
+                  target="_blank">ฝ่ายสนับสนุน</a></li>
+              <li><a href="https://www.up.ac.th/" target="_blank">University of Phayao</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div class="footer-copyright">
+          © 2026 WashNclean UP. พัฒนา โดย
+          <a href="#" class="team-link" onclick="openTeamModal(); return false;">
+            บริษัทความอดทนมีจำกัด
+          </a>. สงวนลิขสิทธิ์ทุกประการ.
+        </div>
+
+        <!-- ไอคอน -->
+        <div class="footer-social-admin">
+          <a href="https://www.facebook.com/nuttada.netpub/" target="_blank" class="social-icon" aria-label="Facebook">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path
+                d="M22.675 0h-21.35C.597 0 0 .597 0 1.325v21.351C0 23.403.597 24 1.325 24H12.82v-9.294H9.692v-3.622h3.128V8.413c0-3.1 1.893-4.788 4.659-4.788 1.325 0 2.463.099 2.795.143v3.24l-1.918.001c-1.504 0-1.795.715-1.795 1.763v2.313h3.587l-.467 3.622h-3.12V24h6.116c.73 0 1.323-.597 1.323-1.324V1.325C24 .597 23.403 0 22.675 0z" />
+            </svg>
+          </a>
+          <a href="https://teams.microsoft.com/l/chat/0/0?users=68026080@up.ac.th" target="_blank" class="social-icon"
+            aria-label="Microsoft Teams">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path
+                d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z" />
+            </svg>
+          </a>
+
+          <a href="admin/login.html" class="secret-admin" title="สำหรับผู้ดูแลระบบ">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+            </svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Modal ผู้จัดทำ -->
+  <div id="team-modal" class="landing-modal-backdrop" hidden>
+    <div class="team-modal-container">
+      <button class="landing-modal-close" onclick="closeTeamModal()" aria-label="ปิด">&times;</button>
+      <div class="team-modal-scroll-area">
+        <div class="team-header">
+          <div class="team-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+              stroke-linejoin="round">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+              <circle cx="9" cy="7" r="4"></circle>
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+              <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+            </svg>
+          </div>
+          <h2>สมาชิกจัดทำ</h2>
+          <p>นักศึกษาวิทยาการคอมพิวเตอร์ มหาวิทยาลัยพะเยา</p>
+        </div>
+
+        <div class="team-grid">
+          <!-- สมาชิก 1 -->
+          <div class="team-card">
+            <div class="team-avatar">
+              <img src="https://ui-avatars.com/api/?name=Nuttada+N&background=2bb8d6&color=fff&size=150&font-size=0.4"
+                alt="Nuttada Netpub">
+            </div>
+            <div class="team-card-info">
+              <h3>NUTTADA NETPUB</h3>
+              <p>CEO</p>
+            </div>
+          </div>
+
+          <!-- สมาชิก 2 -->
+          <div class="team-card">
+            <div class="team-avatar">
+              <img
+                src="https://ui-avatars.com/api/?name=TANAWAT+KONGTAWORN&background=ff8fa3&color=fff&size=150&font-size=0.4"
+                alt="TANAWAT KONGTAWORN">
+            </div>
+            <div class="team-card-info">
+              <h3>TANAWAT KONGTAWORN</h3>
+              <p>Co-Founder</p>
+            </div>
+          </div>
+
+          <!-- สมาชิก 3 -->
+          <div class="team-card">
+            <div class="team-avatar">
+              <img
+                src="https://ui-avatars.com/api/?name=Manassawee+W&background=ffd166&color=fff&size=150&font-size=0.4"
+                alt="MANASSAWEE WANGPANYA">
+            </div>
+            <div class="team-card-info">
+              <h3>MANASSAWEE WANGPANYA</h3>
+              <p>Programmer / Database Analyst</p>
+            </div>
+          </div>
+
+          <!-- สมาชิก 4 -->
+          <div class="team-card">
+            <div class="team-avatar">
+              <img src="https://ui-avatars.com/api/?name=Nuttanun+I&background=8fd3f4&color=fff&size=150&font-size=0.4"
+                alt="NUTTANUN INTANONDUNG">
+            </div>
+            <div class="team-card-info">
+              <h3>NUTTANUN INTANONDUNG</h3>
+              <p>System Analyst</p>
+            </div>
+          </div>
+
+          <!-- สมาชิก 5  -->
+          <div class="team-card">
+            <div class="team-avatar">
+              <img
+                src="https://ui-avatars.com/api/?name=PHUWANET+SAPTHARAPHAK&background=a0e3c2&color=fff&size=150&font-size=0.4"
+                alt="Member 5">
+            </div>
+            <div class="team-card-info">
+              <h3>PHUWANET SAPTHARAPHAK</h3>
+              <p>System Analyst</p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal เกี่ยวกับระบบ -->
+  <div id="about-modal" class="landing-modal-backdrop" hidden>
+    <div class="landing-modal-container">
+      <button class="landing-modal-close" onclick="closeAboutModal()" aria-label="ปิด">&times;</button>
+
+      <div class="landing-modal-scroll-area">
+        <section class="about-card" id="about-us">
+          <div class="about-card-header">
+            <div class="about-card-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="16" x2="12" y2="12"></line>
+                <line x1="12" y1="8" x2="12.01" y2="8"></line>
+              </svg>
+            </div>
+            <h2>เกี่ยวกับ WashNclean UP</h2>
+          </div>
+          <p class="about-text">
+            <strong>WashNclean UP</strong>
+            คือเว็บแอปพลิเคชันที่สร้างขึ้นมาเพื่อแก้ปัญหาคลาสสิกของชาวหอพักมหาวิทยาลัยพะเยา นั่นคือ
+            "การเดินลงไปดูเครื่องซักผ้าแล้วพบว่าเครื่องเต็ม"
+            เรามุ่งหวังให้ทุกคนสามารถตรวจสอบสถานะของเครื่องซักผ้าและเตารีดส่วนกลางได้แบบเรียลไทม์จากบนห้องพัก
+            ช่วยประหยัดเวลาและทำให้การใช้ชีวิตในหอพักสะดวกสบายยิ่งขึ้น
+          </p>
+        </section>
+
+        <section class="about-card" id="how-to">
+          <div class="about-card-header">
+            <div class="about-card-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round">
+                <polygon points="5 3 19 12 5 21 5 3"></polygon>
+              </svg>
+            </div>
+            <h2>วิธีใช้งานเบื้องต้น</h2>
+          </div>
+          <div class="about-step-list">
+            <div class="about-step-item">
+              <div class="about-step-num">1</div>
+              <div class="about-step-text">
+                <h4>เช็คสถานะก่อนลงไป</h4>
+                <p>เปิดหน้าเว็บเพื่อดูสถานะเครื่องซักผ้า หรือเตารีด (สลับแท็บได้ที่เมนูด้านล่าง) หากเป็นสีเขียวแปลว่า
+                  "ว่าง" สามารถนำผ้าลงไปซักได้เลย</p>
+              </div>
+            </div>
+            <div class="about-step-item">
+              <div class="about-step-num">2</div>
+              <div class="about-step-text">
+                <h4>ติดตามเวลาซัก</h4>
+                <p>หากเครื่องกำลังทำงาน ระบบจะแสดงเวลาถอยหลังโดยประมาณ คุณสามารถกะเวลาลงไปรับผ้าได้โดยไม่ต้องไปยืนรอ</p>
+              </div>
+            </div>
+            <div class="about-step-item">
+              <div class="about-step-num">3</div>
+              <div class="about-step-text">
+                <h4>แจ้งปัญหาเมื่อเครื่องเสีย</h4>
+                <p>หากพบว่าเครื่องใช้งานไม่ได้ น้ำไม่ไหล หรือมีปัญหาอื่นๆ สามารถกดที่ไอคอนแชท (แจ้งปัญหา) มุมขวาบน
+                  ถ่ายรูปและส่งให้แอดมินดำเนินการได้ทันที</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="about-card" id="faq">
+          <div class="about-card-header">
+            <div class="about-card-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round">
+                <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                <line x1="12" y1="17" x2="12.01" y2="17"></line>
+              </svg>
+            </div>
+            <h2>คำถามที่พบบ่อย (FAQ)</h2>
+          </div>
+          <div class="about-faq-item">
+            <p class="about-faq-q">ข้อมูลอัปเดตแบบเรียลไทม์หรือไม่?</p>
+            <p class="about-faq-a">ใช่ครับ ระบบจะดึงข้อมูลสถานะของเครื่องและเวลาที่เหลืออยู่อัตโนมัติทุกๆ 1 วินาที
+              โดยที่คุณไม่ต้องกดรีเฟรชหน้าจอเอง</p>
+          </div>
+          <div class="about-faq-item">
+            <p class="about-faq-q">ต้องสมัครสมาชิกก่อนใช้งานไหม?</p>
+            <p class="about-faq-a">ไม่จำเป็นครับ WashNclean UP
+              ถูกออกแบบมาให้ทุกคนเปิดเบราว์เซอร์แล้วเข้าดูสถานะได้ทันทีโดยไม่ต้องเข้าสู่ระบบ</p>
+          </div>
+          <div class="about-faq-item">
+            <p class="about-faq-q">แจ้งปัญหาเครื่องเสียไปแล้ว แอดมินจะเห็นเมื่อไหร่?</p>
+            <p class="about-faq-a">ระบบจะส่งข้อมูลรูปภาพและรายละเอียดไปยังระบบหลังบ้านของแอดมินทันที
+              และสถานะเครื่องนั้นจะถูกเปลี่ยนเป็น "เครื่องมีปัญหา" เพื่อแจ้งเตือนให้คนอื่นทราบด้วย</p>
+          </div>
+        </section>
+
+        <section class="about-card" id="terms">
+          <div class="about-card-header">
+            <div class="about-card-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+                <line x1="16" y1="13" x2="8" y2="13"></line>
+                <line x1="16" y1="17" x2="8" y2="17"></line>
+                <polyline points="10 9 9 9 8 9"></polyline>
+              </svg>
+            </div>
+            <h2>ข้อตกลงการใช้งาน</h2>
+          </div>
+          <ul class="about-terms-list">
+            <li><strong>การตรงต่อเวลา:</strong> เมื่อระบบแจ้งเตือนว่าเครื่องทำงานเสร็จแล้ว
+              ขอความร่วมมือผู้ใช้นำผ้าออกจากเครื่องทันที เพื่อให้ผู้อื่นสามารถใช้งานต่อได้</li>
+            <li><strong>การแจ้งปัญหาเท็จ:</strong> ห้ามสแปมหรือส่งข้อมูลแจ้งซ่อมเท็จ ระบบจะมีการเก็บ Log
+              และรหัสนิสิตไว้เพื่อตรวจสอบ หากพบการป่วนระบบอาจถูกตัดสิทธิ์การใช้งาน</li>
+            <li><strong>ความเป็นส่วนตัว:</strong> การถ่ายภาพเพื่อรายงานปัญหา
+              กรุณาหลีกเลี่ยงการถ่ายติดใบหน้าของบุคคลอื่นโดยไม่ได้รับอนุญาต</li>
+            <li><strong>การดูแลรักษา:</strong> ผู้ใช้ควรช่วยกันรักษาความสะอาดของเครื่องซักผ้าและเตารีดส่วนกลาง
+              เพื่อสุขอนามัยที่ดีของส่วนรวม</li>
+          </ul>
+        </section>
+      </div>
+    </div>
+  </div>
+
+  <script src="icons.js"></script>
+  <script>
+    const phrases = [
+      "เพราะเราเข้าใจความขี้เกียจของคุณ :D",
+      "ไม่ต้องหอบตะกร้าลงไปเก้ออีกต่อไป",
+      "เช็คสถานะเครื่องซักผ้าได้แค่ปลายนิ้ว",
+      "รู้ว่าว่างค่อยลงไปซัก ชีวิตดีขึ้นเยอะ",
+      "เตารีดว่างไหม เช็คผ่านเว็บได้เลย",
+      "ให้เรื่องซักผ้า เป็นเรื่องชิลๆ"
+    ];
+
+    let phraseIndex = 0;
+    let charIndex = 0;
+    let isDeleting = false;
+    const dynamicTag = document.getElementById("dynamic-tag");
+
+    const typingSpeed = 60;
+    const deletingSpeed = 30;
+    const pauseEnd = 2000;
+    const pauseStart = 500;
+
+    function typeEffect() {
+      const currentPhrase = phrases[phraseIndex];
+
+      if (isDeleting) {
+        dynamicTag.textContent = currentPhrase.substring(0, charIndex - 1);
+        charIndex--;
+      } else {
+        dynamicTag.textContent = currentPhrase.substring(0, charIndex + 1);
+        charIndex++;
+      }
+
+      let typeDelay = isDeleting ? deletingSpeed : typingSpeed;
+
+      if (!isDeleting && charIndex === currentPhrase.length) {
+        typeDelay = pauseEnd;
+        isDeleting = true;
+      } else if (isDeleting && charIndex === 0) {
+        isDeleting = false;
+        phraseIndex = (phraseIndex + 1) % phrases.length;
+        typeDelay = pauseStart;
+      }
+
+      setTimeout(typeEffect, typeDelay);
+    }
+
+    setTimeout(typeEffect, 800);
+
+    const scrollIndicator = document.getElementById('scroll-indicator');
+    let showTimeout = null;
+    let hideTimeout = null;
+    let hasScrolledDown = false;
+    let isSnapping = false;
+
+    function clearIndicatorTimers() {
+      clearTimeout(showTimeout);
+      clearTimeout(hideTimeout);
+    }
+
+    function triggerScrollIndicator() {
+      clearIndicatorTimers();
+      if (window.scrollY <= 10 && hasScrolledDown) {
+        scrollIndicator.classList.add('show');
+        hideTimeout = setTimeout(() => {
+          scrollIndicator.classList.remove('show');
+          showTimeout = setTimeout(() => {
+            if (window.scrollY <= 10 && hasScrolledDown) {
+              triggerScrollIndicator();
+            }
+          }, 30000);
+        }, 10000);
+      } else {
+        scrollIndicator.classList.remove('show');
+      }
+    }
+
+    window.addEventListener('scroll', () => {
+      if (isSnapping) return;
+      if (window.scrollY > 50) {
+        hasScrolledDown = true;
+        clearIndicatorTimers();
+        scrollIndicator.classList.remove('show');
+      } else if (window.scrollY > 0 && window.scrollY < 120 && !hasScrolledDown) {
+        isSnapping = true;
+        hasScrolledDown = true;
+        scrollIndicator.classList.remove('show');
+        document.getElementById('details-section').scrollIntoView({ behavior: 'smooth' });
+        setTimeout(() => { isSnapping = false; }, 600);
+      } else if (window.scrollY <= 10) {
+        if (hasScrolledDown && !scrollIndicator.classList.contains('show')) {
+          triggerScrollIndicator();
+        }
+      }
+    });
+
+    const LABEL = { available: "ว่าง", busy: "กำลังใช้งาน", broken: "เสีย" };
+    const machines = [
+      { id: "w1", type: "washer", name: "เครื่องซักผ้า 1", status: "busy", sec: 9, total: 45 * 60, demo: true },
+      { id: "w2", type: "washer", name: "เครื่องซักผ้า 2", status: "available" },
+      { id: "w3", type: "washer", name: "เครื่องซักผ้า 3", status: "busy", sec: 305, total: 45 * 60 },
+      { id: "w4", type: "washer", name: "เครื่องซักผ้า 4", status: "broken" },
+      { id: "i1", type: "iron", name: "เตารีด 1", status: "available" },
+      { id: "i2", type: "iron", name: "เตารีด 2", status: "busy" }
+    ];
+    const grid = document.getElementById("tile-grid");
+    const fmt = s => String(Math.floor(s / 60)).padStart(2, "0") + ":" + String(s % 60).padStart(2, "0");
+
+    function renderTile(m, pop) {
+      let el = document.getElementById("t-" + m.id);
+      if (!el) { el = document.createElement("div"); el.id = "t-" + m.id; grid.appendChild(el); }
+      el.className = "tile is-" + m.status + (pop ? " pop" : "");
+      const timer = m.sec != null && m.status === "busy"
+        ? `<div class="t-time">${fmt(m.sec)}</div><div class="t-bar"><b style="width:${100 - (m.sec / m.total) * 100}%"></b></div>` : "";
+      el.innerHTML = `${WcuIcon[m.type]("t-icon", m.status)}<div class="t-name">${m.name}</div><span class="t-pill">${LABEL[m.status]}</span>${timer}<span class="t-spark"></span>`;
+    }
+    machines.forEach(m => renderTile(m, false));
+
+    let demoStarted = false;
+    function runDemo() {
+      if (demoStarted) return; demoStarted = true;
+      const demo = machines[0];
+      setInterval(() => {
+        machines.forEach(m => {
+          if (m.status === "busy" && m.sec != null) {
+            if (m.demo && m.sec <= 0) return;
+            m.sec = Math.max(0, m.sec - 1);
+            // เครื่องตัวอย่างอื่นๆ นับครบแล้ววนใหม่ (เดิมค้างที่ 00:00 ตลอด)
+            if (!m.demo && m.sec === 0) m.sec = m.total;
+            if (!m.demo || m.sec > 0) renderTileTick(m);
+          }
+        });
+        if (demo.status === "busy" && demo.sec === 0) {
+          demo.status = "available"; renderTile(demo, true);
+          setTimeout(() => { demo.status = "busy"; demo.sec = 9; renderTile(demo, true); }, 3500);
+        }
+      }, 1000);
+    }
+    function renderTileTick(m) {
+      const el = document.getElementById("t-" + m.id);
+      const t = el.querySelector(".t-time"), b = el.querySelector(".t-bar b");
+      if (t) t.textContent = fmt(m.sec);
+      if (b) b.style.width = (100 - (m.sec / m.total) * 100) + "%";
+    }
+    document.getElementById("cta-washer").innerHTML = WcuIcon.washer("", "busy");
+
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(en => {
+        if (!en.isIntersecting) return;
+        en.target.classList.add("in");
+        if (en.target.id === "demo-card") runDemo();
+        io.unobserve(en.target);
+      });
+    }, { threshold: 0.25 });
+    document.querySelectorAll(".rv").forEach(el => io.observe(el));
+
+    const aboutModal = document.getElementById('about-modal');
+
+    function openAboutModal(targetId) {
+      const allCards = document.querySelectorAll('.about-card');
+      allCards.forEach(card => card.style.display = 'none');
+      const targetEl = document.getElementById(targetId);
+      if (targetEl) targetEl.style.display = 'block';
+
+      aboutModal.hidden = false;
+      document.body.style.overflow = 'hidden';
+      document.querySelector('.landing-modal-scroll-area').scrollTop = 0;
+    }
+
+    function closeAboutModal() {
+      aboutModal.hidden = true;
+      document.body.style.overflow = '';
+    }
+
+    aboutModal.addEventListener('click', (e) => {
+      if (e.target === aboutModal) closeAboutModal();
+    });
+
+    const teamModal = document.getElementById('team-modal');
+
+    function openTeamModal() {
+      teamModal.hidden = false;
+      document.body.style.overflow = 'hidden';
+      // รีเซ็ตการ Scroll ให้อยู่บนสุดเสมอ
+      document.querySelector('.team-modal-scroll-area').scrollTop = 0;
+    }
+
+    function closeTeamModal() {
+      teamModal.hidden = true;
+      document.body.style.overflow = '';
+    }
+
+    teamModal.addEventListener('click', (e) => {
+      if (e.target === teamModal) closeTeamModal();
+    });
+  </script>
+
+</body>
+
+</html>
